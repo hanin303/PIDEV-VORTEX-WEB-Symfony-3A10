@@ -121,17 +121,7 @@ class Reservation
         return $this;
     }
 
-    public function getIdMoyen(): ?MoyenTransport
-    {
-        return $this->id_moyen;
-    }
-
-    public function setIdMoyen(?MoyenTransport $id_moyen): self
-    {
-        $this->id_moyen = $id_moyen;
-
-        return $this;
-    }
+    
 
     public function getIdIt(): ?Iteneraire
     {
