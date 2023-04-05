@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}MoyenTransport index{% endblock %}
+
+{% block body %}
+    <h1>MoyenTransport index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Matricule</th>
+                <th>Num</th>
+                <th>Capacite</th>
+                <th>Type_vehicule</th>
+                <th>Marque</th>
+                <th>Etat</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for moyen_transport in moyen_transports %}
+            <tr>
+                <td>{{ moyen_transport.id }}</td>
+                <td>{{ moyen_transport.matricule }}</td>
+                <td>{{ moyen_transport.num }}</td>
+                <td>{{ moyen_transport.capacite }}</td>
+                <td>{{ moyen_transport.typeVehicule }}</td>
+                <td>{{ moyen_transport.marque }}</td>
+                <td>{{ moyen_transport.etat }}</td>
+                <td>
+                    <a href="{{ path('app_moyen_transport_show', {'id': moyen_transport.id}) }}">show</a>
+                    <a href="{{ path('app_moyen_transport_edit', {'id': moyen_transport.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_moyen_transport_new') }}">Create new</a>
+{% endblock %}

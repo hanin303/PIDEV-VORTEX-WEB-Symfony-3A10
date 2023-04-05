@@ -38,7 +38,7 @@ class MoyenTransport
     private ?Ligne $id_ligne = null;
 
     #[ORM\ManyToOne(inversedBy: 'id_moy')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?Station $station = null;
 
     #[ORM\OneToMany(mappedBy: 'id_moy', targetEntity: Reservation::class)]
@@ -46,7 +46,7 @@ class MoyenTransport
 
     public function __construct()
     {
-        $this->id_res = new ArrayCollection();
+
         $this->id_reservation = new ArrayCollection();
     }
 
@@ -151,35 +151,8 @@ class MoyenTransport
         return $this;
     }
 
-    /**
-     * @return Collection<int, Reservation>
-     */
-    public function getIdRes(): Collection
-    {
-        return $this->id_res;
-    }
 
-    public function addIdRe(Reservation $idRe): self
-    {
-        if (!$this->id_res->contains($idRe)) {
-            $this->id_res->add($idRe);
-            $idRe->setIdMoyen($this);
-        }
 
-        return $this;
-    }
-
-    public function removeIdRe(Reservation $idRe): self
-    {
-        if ($this->id_res->removeElement($idRe)) {
-            // set the owning side to null (unless already changed)
-            if ($idRe->getIdMoyen() === $this) {
-                $idRe->setIdMoyen(null);
-            }
-        }
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, Reservation>
