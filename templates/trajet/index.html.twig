@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Trajet index{% endblock %}
+
+{% block body %}
+    <h1>Trajet index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Temps_parcours</th>
+                <th>Pts_depart</th>
+                <th>Pts_arrive</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for trajet in trajets %}
+            <tr>
+                <td>{{ trajet.id }}</td>
+                <td>{{ trajet.tempsParcours }}</td>
+                <td>{{ trajet.ptsDepart }}</td>
+                <td>{{ trajet.ptsArrive }}</td>
+                <td>
+                    <a href="{{ path('app_trajet_show', {'id': trajet.id}) }}">show</a>
+                    <a href="{{ path('app_trajet_edit', {'id': trajet.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_trajet_new') }}">Create new</a>
+{% endblock %}
