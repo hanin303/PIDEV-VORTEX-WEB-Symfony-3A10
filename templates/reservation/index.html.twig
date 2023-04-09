@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Reservation index{% endblock %}
+
+{% block body %}
+    <h1>La Liste des Reservations </h1>
+  <button><a href="{{ path('app_reservation_new') }}">Create new</a></button>
+  
+    <table class="table" border="1">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Date_reservation</th>
+                <th>itineraire</th>
+                <th>Moyen Transport</th>
+                <th>Heure_depart</th>
+                <th>Heure_arrive</th>
+                <th>Type_ticket</th>
+                <th>Status</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for reservation in reservations %}
+            <tr>
+                <td>{{ reservation.id }}</td>
+                <td>{{ reservation.dateReservation ? reservation.dateReservation|date('Y-m-d') : '' }}</td>
+                <td>{{ reservation.idIt.ptsdepart ~ ' => ' ~ reservation.idIt.ptsarrive }}</td>
+                <td>{{ reservation.idMoy.typeVehicule }}</td>
+                <td>{{ reservation.heureDepart }}</td>
+                <td>{{ reservation.heureArrive }}</td>
+                <td>{{ reservation.typeTicket }}</td>
+                <td>{{ reservation.status }}</td>
+              
+                <td>
+                    <a href="{{ path('app_reservation_show', {'id': reservation.id}) }}"><button style="background-color: yellow;">Afficher</button></a>
+                    <a href="{{ path('app_reservation_edit', {'id': reservation.id}) }}"><button style="background-color: green;">Modifier</button></a>
+                   
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+   
+{% endblock %}
