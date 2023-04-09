@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\TicketRepository;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TicketRepository::class)]
@@ -17,6 +18,7 @@ class Ticket
     private ?string $status = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message:"prix is required")]
     private ?string $prix = null;
 
     #[ORM\OneToOne(inversedBy: 'id_ticket', cascade: ['persist', 'remove'])]

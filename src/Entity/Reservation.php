@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ReservationRepository;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -15,18 +16,22 @@ class Reservation
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Assert\NotBlank(message:"Date reservation is required")]
     private ?\DateTimeInterface $date_reservation = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message:"heure depart is required")]
     private ?string $heure_depart = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message:"heure arriver is required")]
     private ?string $heure_arrive = null;
 
     #[ORM\Column(length: 255)]
     private ?string $status = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message:"Type Ticket is required")]
     private ?string $type_ticket = null;
 
     #[ORM\ManyToOne(inversedBy: 'id_reservation')]
@@ -35,10 +40,12 @@ class Reservation
 
     #[ORM\ManyToOne(inversedBy: 'id_reservation')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotBlank(message:"Moyen Transport is required")]
     private ?MoyenTransport $id_moy = null;
 
     #[ORM\ManyToOne(inversedBy: 'id_reservation')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotBlank(message:"itineraire is required")]
     private ?Iteneraire $id_it = null;
 
     #[ORM\OneToOne(mappedBy: 'id_reservation', cascade: ['persist', 'remove'])]
