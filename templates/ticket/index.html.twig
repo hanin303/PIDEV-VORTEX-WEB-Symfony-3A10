@@ -1,38 +1,127 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Ticket index{% endblock %}
+{% block title %}Ticket index
+{% endblock %}
 
 {% block body %}
-    <h1>Ticket index</h1>
 
-    <a href="{{ path('app_ticket_new') }}">Create new</a>
-    <table class="table" border="1">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Status</th>
-                <th>Prix</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for ticket in tickets %}
-            <tr>
-                <td>{{ ticket.id }}</td>
-                <td>{{ ticket.status }}</td>
-                <td>{{ ticket.prix }}</td>
-                <td>
-                    <a href="{{ path('app_ticket_show', {'id': ticket.id}) }}"><button style="background-color: yellow;">Afficher</button></a>
-                    <a href="{{ path('app_ticket_edit', {'id': ticket.id}) }}"><button style="background-color: green;">Modifier</button></a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="4">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+	<center>
+		<div style="margin-top:70px ; margin-right:1000px">
+			<h1 style="margin-left:90px; font-weight: bold; font-family: 'Times New Roman', Times, serif;">Liste des Tickets
+			</h1>
+			<br>
+			<a href="{{ path('app_ticket_new') }}">
+				<button type="button" class="btn btn-primary">
+					<i class="bi bi-plus-circle me-2"></i>
+					Ajouter Ticket</button>
+			</a>
+		</div>
+	</center>
+	<br>
+	<div class="d-flex justify-content-center ">
+		{% for type, messages in app.flashes %}
+			{% for message in messages %}
+				<div class="alert alert-{{ type }} alert-dismissible fade show d-flex align-items-center">
+					<i class="bi bi-check-circle me-2"></i>
+					<div>
+						{{ message }}
+					</div>
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
 
-   
+			{% endfor %}
+		{% endfor %}
+	</div>
+	<div style="display:inline-block;align-items: center; margin-left:350px;margin-right:60px">
+		<form class="form-inline">
+			<div class="input-group">
+				<input class="form-control mr-sm-2" id="date" name="date" type="search" placeholder="Search.." onkeyup="myFunction()" aria-label="Search" style="width: 400px;">
+				<div class="input-group-append">
+					<span class="input-group-text">
+						<i class="bi bi-search"></i>
+					</span>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div style="display: flex ;align-items: center;justify-content: center;margin-top:25px; margin-left:350px;margin-right:20px ; background-color: white">
+		<table class="table table-bordered border-primary" id="myTable">
+			<thead>
+				<tr>
+					<th>Id</th>
+					<th>Type Ticket</th>
+					<th>Prix</th>
+					<th>Status</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for ticket in tickets %}
+					<tr>
+						<td>{{ ticket.id }}</td>
+						<td>{{ ticket.nomTicket}}</td>
+						<td>{{ ticket.prix }}</td>
+						{#<td>{{ ticket.status }}</td>#}
+						<td>
+							{% if ticket.status == "non payer" %}
+								<span class="badge bg-danger" style="font-size: 14px;">{{ ticket.status }}</span>
+							{% elseif ticket.status == "payer" %}
+								<span class="badge bg-primary" style="font-size: 14px;">{{ ticket.status }}</span>
+							{% endif %}
+						</td>
+						<td>
+							<a href="{{ path('app_ticket_show', {'id': ticket.id}) }}">
+								<button type="button" class="btn btn-warning">
+									<i class="bi bi-file-earmark-text me-2"></i>Aperçu</button>
+							</a>
+							<a href="{{ path('app_ticket_edit', {'id': ticket.id}) }}">
+								<button type="button" class="btn btn-success">
+									<i class="bi bi-pencil me-2"></i>Modifier</button>
+							</a>
+						</td>
+					</tr>
+				{% else %}
+					<tr>
+						<td colspan="4">no records found</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+
+	<script>
+		function myFunction() {
+var input,
+filter1,
+filter2,
+table,
+tr,
+td1,
+td2,
+i,
+txtValue1,
+txtValue2;
+input = document.getElementById("date");
+filter1 = input.value.toUpperCase();
+filter2 = input.value.toUpperCase(); // Second filter value
+
+table = document.getElementById("myTable");
+tr = table.getElementsByTagName("tr");
+for (i = 0; i < tr.length; i++) {
+td1 = tr[i].getElementsByTagName("td")[1]; // First column to search
+td2 = tr[i].getElementsByTagName("td")[2]; // Second column to search
+if (td1 || td2) {
+txtValue1 = td1.textContent || td1.innerText;
+txtValue2 = td2.textContent || td2.innerText;
+if (txtValue1.toUpperCase().indexOf(filter1) > -1 || txtValue2.toUpperCase().indexOf(filter2) > -1) {
+tr[i].style.display = "";
+} else {
+tr[i].style.display = "none";
+}
+}
+}
+}
+	</script>
+
+
 {% endblock %}
