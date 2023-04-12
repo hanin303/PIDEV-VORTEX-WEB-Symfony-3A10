@@ -5,13 +5,13 @@
            <!-- Post -->
 	 <section class="post">
 		  <header class="major">
-		     <span class="date">April 09, 2023</span>
+		     <span class="date">Join Us</span>
 			   <h1>S'inscrire</h1>
 		  </header>
     <div class="section-content">
           
-  {# you should put your registration form here #}
-
+   {{ form_start(form,{'attr': {'novalidate': 'novalidate'}} ) }}
+    {{ include('user/_form.html.twig') }}
     </div>
   </section>
 </div>
