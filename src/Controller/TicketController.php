@@ -32,7 +32,7 @@ class TicketController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $ticketRepository->save($ticket, true);
-
+            $this->addFlash('success', 'ticket ajouter avec succès!');
             return $this->redirectToRoute('app_ticket_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -58,7 +58,7 @@ class TicketController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $ticketRepository->save($ticket, true);
-
+            $this->addFlash('success', 'ticket modifier avec succès!');
             return $this->redirectToRoute('app_ticket_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -74,7 +74,7 @@ class TicketController extends AbstractController
         if ($this->isCsrfTokenValid('delete'.$ticket->getId(), $request->request->get('_token'))) {
             $ticketRepository->remove($ticket, true);
         }
-
+        $this->addFlash('success', 'ticket supprimer avec succès!');
         return $this->redirectToRoute('app_ticket_index', [], Response::HTTP_SEE_OTHER);
     }
 
