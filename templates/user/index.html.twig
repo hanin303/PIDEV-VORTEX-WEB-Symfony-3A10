@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des utilisateurs {% endblock %}
+
+{% block body %}
+    <div style="text-align: center;">
+    <h1>nouveau utilisateur</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nom</th>
+                <th>Prenom</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Mdp</th>
+                <th>Num_tel</th>
+                <th>CIN</th>
+                <th>Image</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.nom }}</td>
+                <td>{{ user.prenom }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.mdp }}</td>
+                <td>{{ user.numTel }}</td>
+                <td>{{ user.CIN }}</td>
+                <td>{{ user.image }}</td>
+                <td>
+                    <a href="{{ path('app_user_show', {'id': user.id}) }}">Afficher</a>
+                    <a href="{{ path('app_user_edit', {'id': user.id}) }}">Modifier</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="10">Pas d'utilisateurs</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_user_new') }}">Ajouter</a>
+{% endblock %}

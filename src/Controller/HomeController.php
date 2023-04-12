@@ -20,6 +20,11 @@ class HomeController extends AbstractController
             'controller_name' => 'HomeController',
         ]);
     }
+    #[Route('/register', name: 'Inscription')]
+    public function register(): Response
+    {
+        return $this->render('user/register.html.twig');
+    }
 
     #[Route('/reserver', name: 'reserver')]
     public function newReservation(Request $request, ReservationRepository $reservationRepository): Response

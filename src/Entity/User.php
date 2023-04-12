@@ -156,8 +156,8 @@ class User
     public function setImage(string $image): self
     {
         $this->image = $image;
-
         return $this;
+
     }
 
     public function getIdRole(): ?Role
