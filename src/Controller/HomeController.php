@@ -15,6 +15,11 @@ class HomeController extends AbstractController
             'controller_name' => 'HomeController',
         ]);
     }
+    #[Route('/register', name: 'Inscription')]
+    public function register(): Response
+    {
+        return $this->render('user/register.html.twig');
+    }
 
     #[Route('/tarifs', name: 'tarif_ticket')]
     public function listTarifs(): Response

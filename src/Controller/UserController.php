@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Entity\Role;
 use App\Form\RegisterType;
 use App\Form\UserType;
+use App\Form\AdminEditType;
 use App\Repository\RoleRepository;
 use App\Repository\UserRepository;
 use App\Repository\UserStateRepository;
@@ -99,15 +100,11 @@ class UserController extends AbstractController
     #[Route('/{id}/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, User $user, UserRepository $userRepository,imageUploader $imageUploader): Response
     {
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(AdminEditType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $file=$form->get('images')->getData();
-            if($file){
-            $imageFileName = $imageUploader->upload($file);
-            $user->setImage($imageFileName);
-            }
+            
             $userRepository->save($user, true);
 
             return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
