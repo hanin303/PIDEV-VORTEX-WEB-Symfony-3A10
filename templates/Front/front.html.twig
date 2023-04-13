@@ -34,13 +34,13 @@
 				<!-- Nav -->
 					<nav id="nav">
 						<ul class="links">
-							<li class="active"><a href="{{ path('security_login') }}">SE CONNECTER</a></li>
+							<li> <a href="{{ path('security_login') }}">SE CONNECTER</a></li>
 							<li ><a href="{{ path('security_registration') }}">Inscription</a></li>
 							<li><a href ="#" >Lignes Urbaines</a></li>
 							<li><a href ="#">Itinéraires</a></li>
 							<li><a href ="#">Communes</a></li>
 							<li><a href ="{{ path('tarif_ticket') }}">Tarifs</a></li>
-							<li><a href ="#">Contact</a></li>
+							<li class="active"><a href="{{ path('app_reclamation') }}">Reclamation</a></li>
 							
 						</ul>
 						<ul class="icons">
@@ -59,7 +59,7 @@
 							</article>
 
 					</div>
-					   {% endblock %}
+					
 
 				<!-- Footer -->
 					<footer id="footer">
@@ -116,7 +116,7 @@
 
 			</div>
 
-
+   {% endblock %}
            {% block js %}
 		<!-- Scripts -->
 			<script src="{{ asset('Front/assets/js/jquery.min.js') }}"></script>
