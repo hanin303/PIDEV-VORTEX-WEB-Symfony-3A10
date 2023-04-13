@@ -10,6 +10,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\CommuneRepository;
+use App\Form\CommuneType;
+use App\Entity\Commune;
 
 class HomeController extends AbstractController
 {
@@ -74,12 +77,13 @@ class HomeController extends AbstractController
         return $this->render('iteneraire/itineraire.html.twig');
     }
 
-    #[Route('/communes', name: 'voyager_commune')]
-    public function listCommunes(): Response
+    #[Route('/communes', name: 'voyager_commune', methods: ['GET'])]
+    public function listTrajet(CommuneRepository $communeRepository): Response
     {
-        return $this->render('commune/commune.html.twig');
+        return $this->render('commune/communeFront.html.twig', [
+            'communes' => $communeRepository->findAll(),
+        ]);
     }
-
     #[Route('/reclamation', name: 'reclamation')]
     public function listReclamations(): Response
     {
