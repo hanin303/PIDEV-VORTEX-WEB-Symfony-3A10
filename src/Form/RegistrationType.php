@@ -60,7 +60,7 @@ class RegistrationType extends AbstractType
                 ])*/
             ],
         ])
-        ->add('mdp',RepeatedType::class, [
+        ->add('password',RepeatedType::class, [
             'type' => PasswordType::class,
             'invalid_message' => 'les mots de passe ne correspondent pas',
             'options' => ['attr' => ['class' => 'password-field']],

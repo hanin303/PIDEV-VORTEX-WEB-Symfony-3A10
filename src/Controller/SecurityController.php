@@ -11,9 +11,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Form\RegistrationType;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Doctrine\ORM\EntityManagerInterface;
 class SecurityController extends AbstractController
 {
-   
     #[Route('/inscription', name: 'security_registration',methods: ['GET', 'POST'])]
     public function registration(Request $request, UserRepository $userRepository,RoleRepository $roleRepository,UserStateRepository $userStateRepository,imageUploader $imageUploader): Response
     {
@@ -24,8 +25,8 @@ class SecurityController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $password = $form->get('mdp')->getData();
-            $user->setMdp(base64_encode($password));
+            $mdp = $form->get('password')->getData();
+            $user->setPassword(base64_encode($mdp));
             $file=$form->get('images')->getData();
             if($file){
             $imageFileName = $imageUploader->upload($file);
@@ -43,12 +44,27 @@ class SecurityController extends AbstractController
             'form' => $form->createView(),
                 ]);
     }
-
-    #[Route('/connexion', name: 'security_login')]
-    public function login() : Response
+    #[Route(path: '/connexion', name: 'security_login')]
+    public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        return $this->render('security/login.html.twig');
+        // if ($this->getUser()) {
+        //     return $this->redirectToRoute('target_path');
+        // }
+
+        // get the login error if there is one
+        $error = $authenticationUtils->getLastAuthenticationError();
+        // last username entered by the user
+        $lastUsername = $authenticationUtils->getLastUsername();
+
+        return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
     }
 
-  
+    #[Route(path: '/logout', name: 'app_logout')]
+    public function logout(): void
+    {
+        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
+    }
 }
+    
+
+    

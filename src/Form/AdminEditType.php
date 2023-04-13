@@ -26,7 +26,7 @@ class AdminEditType extends AbstractType
                 'disabled' => true])
             ->add('email',TextType::class, [
                 'disabled' => true])
-            ->add('mdp',TextType::class, [
+            ->add('password',TextType::class, [
                 'disabled' => true])
             ->add('num_tel',TextType::class, [
                 'disabled' => true])

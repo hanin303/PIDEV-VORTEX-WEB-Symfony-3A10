@@ -36,14 +36,17 @@ class UserController extends AbstractController
     public function new(Request $request, UserRepository $userRepository,imageUploader $imageUploader): Response
     {
         $user = new User();
+        $user->setImage('null');
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $file=$form->get('images')->getData();
+            $mdp = $form->get('password')->getData();
+            $user->setPassword(base64_encode($mdp));
+            /*$file=$form->get('images')->getData();
             if($file){
             $imageFileName = $imageUploader->upload($file);
-            $user->setImage($imageFileName);
+            $user->setImage($imageFileName);*/
                /* $OriginalFile = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
                 $safeFile = $slugger->slug($OriginalFile);             
                 $newFile=$safeFile.'-'.uniqid().'.'.$file->guessExtension();                ;
@@ -52,7 +55,7 @@ class UserController extends AbstractController
                     $user->setImage($newFile);*/
                 
 
-            }
+            
             $userRepository->save($user, true);
 
             return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);

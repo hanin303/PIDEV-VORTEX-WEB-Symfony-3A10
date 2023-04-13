@@ -43,7 +43,7 @@ class RegisterType extends AbstractType
                     new Email(['message' => 'Vous devez saisir une adresse e-mail valide']),
                 ],
             ])
-            ->add('mdp',RepeatedType::class, [
+            ->add('password',RepeatedType::class, [
                 'type' => PasswordType::class,
                 'invalid_message' => 'les mots de passe ne correspondent pas',
                 'options' => ['attr' => ['class' => 'password-field']],
