@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}create user{% endblock %}
+
+{% block body %}
+    <div style="text-align: center;">
+    <h1>nouveau utilisateur</h1>
+    {{ form_start(form,{'attr': {'novalidate': 'novalidate'}} ) }}
+    {{ include('user/_form.html.twig') }}
+    
+    <a href="{{ path('app_user_index') }}">Retour</a>
+{% endblock %}

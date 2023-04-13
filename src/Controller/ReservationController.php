@@ -25,14 +25,18 @@ class ReservationController extends AbstractController
     public function new(Request $request, ReservationRepository $reservationRepository): Response
     {
         $reservation = new Reservation();
+        //$reservation->setDateReservation(new \DateTime('now'));
         $form = $this->createForm(ReservationType::class, $reservation);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            //$reservation->setHeureDepart($form->get('heure_depart')->getData());
+            //$reservation->setHeureArrive($form->get('heure_arrive')->getData());
             $entityManager = $this->getDoctrine()->getManager();
+            $reservation->setStatus("En attente"); 
             $entityManager->persist($reservation);
             $entityManager->flush();
-
+            $this->addFlash('success', 'reservation ajouter avec succès!');
             return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -58,7 +62,7 @@ class ReservationController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $reservationRepository->save($reservation, true);
-
+            $this->addFlash('success', 'reservation modifier avec succès!');
             return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -74,7 +78,8 @@ class ReservationController extends AbstractController
         if ($this->isCsrfTokenValid('delete'.$reservation->getId(), $request->request->get('_token'))) {
             $reservationRepository->remove($reservation, true);
         }
-
+        
+        $this->addFlash('success', 'reservation supprimer avec succès!');
         return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
     }
 }
