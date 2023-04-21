@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -25,27 +26,39 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message:"Vous devez saisir votre nom")]
     private ?string $nom = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message:"Vous devez saisir votre prénom")]
     private ?string $prenom = null;
 
     #[ORM\Column(length: 255,unique :true)]
+    #[Assert\NotBlank(message:"Vous devez saisir votre username")]
     private ?string $username = null;
 
     #[ORM\Column(length: 255,unique :true)]
+    #[Assert\NotBlank(message:"Vous devez saisir votre adresse e-mail")]
+    #[Assert\Email(message:"Vous devez saisir une adresse e-mail valide")]
     private ?string $email = null;
 
     #[ORM\Column(name: 'mdp',length: 255)]
+    #[Assert\NotBlank(message:"Vous devez saisir votre mot de passe")]
+    #[Assert\Length(min:8,max:30,minMessage:"Votre mot de passe doit contenir 8 caractéres",maxMessage:"Votre mot de passe ne doit pas dépasser 30 caractéres")]
     private ?string $password = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message:"Vous devez saisir votre numéro de téléphone")]
+    #[Assert\Length(min:8,minMessage:"Vous devez saisir un numéro de téléphone valide")]
     private ?int $num_tel = null;
 
     #[ORM\Column(unique :true)]
+    #[Assert\NotBlank(message:"Vous devez saisir votre numéro de carte d'identité")]
+    #[Assert\Length(min:8,minMessage:"Vous devez saisir un numéro de carte d'identité valide")]
     private ?int $CIN = null;
 
     #[ORM\Column(length: 255 , nullable: true)]
+    #[Assert\File(maxSize:1024,mimeTypes:["image/jpeg","image/png",'image/jpg'],mimeTypesMessage:"Vous devez sélectionner une image valide")]
     private ?string $image = null;
 
     #[ORM\ManyToOne(inversedBy: 'id_user')]

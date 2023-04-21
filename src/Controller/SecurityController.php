@@ -31,6 +31,7 @@ class SecurityController extends AbstractController
             if($file){
             $imageFileName = $imageUploader->upload($file);
             $user->setImage($imageFileName);
+            
 
             }
             $userRepository->save($user, true);
