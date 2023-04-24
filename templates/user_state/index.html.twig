@@ -3,6 +3,7 @@
 {% block title %}etats des utilisateurs{% endblock %}
 
 {% block body %}
+<div class="row" style="text-align: center;align-items: center;justify-content: center;margin: 200px 500px 30px;">  
     <h1>UserState index</h1>
 
     <table class="table">
@@ -25,11 +26,11 @@
             </tr>
         {% else %}
             <tr>
-                <td colspan="3">no records found</td>
+                <td colspan="3">Pas de roles</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-    <a href="{{ path('app_user_state_new') }}">Create new</a>
+    <a href="{{ path('app_user_state_new') }}">Ajouter</a>
 {% endblock %}

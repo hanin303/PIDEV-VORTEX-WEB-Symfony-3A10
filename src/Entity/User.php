@@ -51,6 +51,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToOne(inversedBy: 'id_user')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Role $id_role = null;
+    private $role = [];
 
     #[ORM\OneToMany(mappedBy: 'id_user', targetEntity: Annonces::class)]
     private Collection $id_annonce;
@@ -286,15 +287,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see UserInterface
      */
-    public function getRoles(): void
+    public function getRoles()
     {
-        $roles = $this->id_role;
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
         // guarantee every user at least has ROLE_USER
     }
 
     public function setRoles(Role $roles): self
     {
         $this->id_role = $roles;
+        $this->role = $roles;
 
         return $this;
     }

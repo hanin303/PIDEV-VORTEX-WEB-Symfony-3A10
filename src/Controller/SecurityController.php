@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controller;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use App\Entity\User;
 use App\Repository\RoleRepository;
 use App\Repository\UserRepository;
@@ -16,7 +17,7 @@ use Doctrine\ORM\EntityManagerInterface;
 class SecurityController extends AbstractController
 {
     #[Route('/inscription', name: 'security_registration',methods: ['GET', 'POST'])]
-    public function registration(Request $request, UserRepository $userRepository,RoleRepository $roleRepository,UserStateRepository $userStateRepository,imageUploader $imageUploader): Response
+    public function registration(Request $request, UserRepository $userRepository,RoleRepository $roleRepository,UserStateRepository $userStateRepository,imageUploader $imageUploader,UserPasswordEncoderInterface $userPasswordEncoder): Response
     {
         $user = new User();
         $user->setIdRole($roleRepository->find(4));
@@ -26,7 +27,10 @@ class SecurityController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $mdp = $form->get('password')->getData();
-            $user->setPassword(base64_encode($mdp));
+            $user->setPassword( $userPasswordEncoder->encodePassword(
+                $user,
+                $mdp
+            ));
             $file=$form->get('images')->getData();
             if($file){
             $imageFileName = $imageUploader->upload($file);
