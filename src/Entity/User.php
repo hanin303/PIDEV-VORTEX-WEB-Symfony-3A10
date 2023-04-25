@@ -180,6 +180,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIdRole(?Role $id_role): self
     {
         $this->id_role = $id_role;
+        $this->role =[];
+        $this->role[]=$id_role->getNom();
+        array_unique($this->role);
 
         return $this;
     }
@@ -289,17 +292,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getRoles()
     {
-        $roles[] = 'ROLE_USER';
-
-        return array_unique($roles);
+        $this->role[]=$this->id_role->getNom();
+        return array_unique($this->role);
         // guarantee every user at least has ROLE_USER
     }
 
     public function setRoles(Role $roles): self
     {
-        $this->id_role = $roles;
-        $this->role = $roles;
 
+        $this->role[]=$roles->getNom();
+        array_unique($this->role);
         return $this;
     }
 
