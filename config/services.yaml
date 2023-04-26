@@ -27,3 +27,6 @@ services:
     App\services\imageUploader:
         arguments:
             $targetDirectory: '%image_directory%' 
+              
+    App\services\Mailer:
+        

@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-
+use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity('email',"Adresse e-mail existe déjà")]
@@ -17,13 +17,20 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 #[UniqueEntity('CIN',"Carte identité existe dèjà")]
 
 
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+/**
+ * Summary of User
+ */
+class User implements UserInterface, PasswordAuthenticatedUserInterface , TwoFactorInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-
+    /**
+    * @ORM\Column()
+    */
+    #[ORM\Column(name: "googleAuthenticatorSecret", length: 255, nullable: true)]
+    private $googleAuthenticatorSecret;
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
@@ -324,5 +331,76 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+    /**
+     * Summary of isGoogleAuthenticatorEnabled
+     * @return bool
+     */
+    public function isGoogleAuthenticatorEnabled(): bool
+    {
+        return null !== $this->googleAuthenticatorSecret;
+    }
+
+    /**
+     * Summary of getGoogleAuthenticatorUsername
+     * @return string
+     */
+    public function getGoogleAuthenticatorUsername(): string
+    {
+        return $this->username;
+    }
+
+    /**
+     * Summary of getGoogleAuthenticatorSecret
+     * @return string|null
+     */
+    public function getGoogleAuthenticatorSecret(): ?string
+    {
+        return $this->googleAuthenticatorSecret;
+    }
+
+    /**
+     * Summary of setGoogleAuthenticatorSecret
+     * @param string|null $googleAuthenticatorSecret
+     * @return void
+     */
+    public function setGoogleAuthenticatorSecret(?string $googleAuthenticatorSecret): void
+    {
+        $this->googleAuthenticatorSecret = $googleAuthenticatorSecret;
+     /**
+      * Summary of isGoogleAuthenticatorEnabled
+      * @return bool
+      */
+    }public function isGoogleAuthenticatorEnabled(): bool
+    {
+        return null !== $this->googleAuthenticatorSecret;
+    }
+
+    /**
+     * Summary of getGoogleAuthenticatorUsername
+     * @return string
+     */
+    public function getGoogleAuthenticatorUsername(): string
+    {
+        return $this->username;
+    }
+
+    /**
+     * Summary of getGoogleAuthenticatorSecret
+     * @return string|null
+     */
+    public function getGoogleAuthenticatorSecret(): ?string
+    {
+        return $this->googleAuthenticatorSecret;
+    }
+
+    /**
+     * Summary of setGoogleAuthenticatorSecret
+     * @param string|null $googleAuthenticatorSecret
+     * @return void
+     */
+    public function setGoogleAuthenticatorSecret(?string $googleAuthenticatorSecret): void
+    {
+        $this->googleAuthenticatorSecret = $googleAuthenticatorSecret;
     }
 }

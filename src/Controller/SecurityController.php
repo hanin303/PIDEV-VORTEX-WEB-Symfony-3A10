@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controller;
+use App\services\Mailer;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use App\Entity\User;
 use App\Repository\RoleRepository;
@@ -14,6 +15,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Form\RegistrationType;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Mailer\MailerInterface;
+
 class SecurityController extends AbstractController
 {
     #[Route('/inscription', name: 'security_registration',methods: ['GET', 'POST'])]
@@ -49,8 +52,11 @@ class SecurityController extends AbstractController
                 ]);
     }
     #[Route(path: '/connexion', name: 'security_login')]
-    public function login(AuthenticationUtils $authenticationUtils): Response
+    public function login(MailerInterface $mailerInterface, AuthenticationUtils $authenticationUtils): Response
     {
+        $mail= new Mailer($mailerInterface);
+        $mail->sendEmail("test");
+
         // if ($this->getUser()) {
         //     return $this->redirectToRoute('target_path');
         // }
