@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\Validator\Constraints\Unique;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 #[Route('/user')]
 class UserController extends AbstractController
@@ -33,7 +34,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/new', name: 'app_user_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, UserRepository $userRepository,imageUploader $imageUploader): Response
+    public function new(Request $request, UserRepository $userRepository,imageUploader $imageUploader,UserPasswordEncoderInterface $userPasswordEncoder): Response
     {
         $user = new User();
         $user->setImage('null');
@@ -42,7 +43,10 @@ class UserController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $mdp = $form->get('password')->getData();
-            $user->setPassword(base64_encode($mdp));
+            $user->setPassword( $userPasswordEncoder->encodePassword(
+                $user,
+                $mdp
+            ));
             /*$file=$form->get('images')->getData();
             if($file){
             $imageFileName = $imageUploader->upload($file);
@@ -76,6 +80,7 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            
             $file=$form->get('images')->getData();
             if($file){
             $imageFileName = $imageUploader->upload($file);

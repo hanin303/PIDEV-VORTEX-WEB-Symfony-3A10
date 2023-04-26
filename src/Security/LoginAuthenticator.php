@@ -19,6 +19,9 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Guard\Authenticator\AbstractFormLoginAuthenticator;
 use Symfony\Component\Security\Guard\PasswordAuthenticatedInterface;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
+use App\Repository\RoleRepository;
+use App\Repository\UserRepository;
+
 
 class LoginAuthenticator extends AbstractFormLoginAuthenticator implements PasswordAuthenticatedInterface
 {
@@ -31,7 +34,6 @@ class LoginAuthenticator extends AbstractFormLoginAuthenticator implements Passw
     private $csrfTokenManager;
     private $passwordEncoder;
     private $security;
-
     public function __construct(Security $security,EntityManagerInterface $entityManager, UrlGeneratorInterface $urlGenerator, CsrfTokenManagerInterface $csrfTokenManager, UserPasswordEncoderInterface $passwordEncoder)
     {
         $this->security=$security;
@@ -97,8 +99,11 @@ class LoginAuthenticator extends AbstractFormLoginAuthenticator implements Passw
             return new RedirectResponse($targetPath);
         }
         $user= $this->security->getUser();
+        
         if($user->getRoles()[0]=="client"){
             return new RedirectResponse($this->urlGenerator->generate('security_registration'));
+        }else if($user->getRoles()[0]=="super admin"){
+            return new RedirectResponse($this->urlGenerator->generate('app_user_index'));
         }
         return new RedirectResponse($this->urlGenerator->generate('home'));
     }

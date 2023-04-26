@@ -50,7 +50,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\ManyToOne(inversedBy: 'id_user')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Role $id_role = null;
+    public ?Role $id_role = null;
     private $role = [];
 
     #[ORM\OneToMany(mappedBy: 'id_user', targetEntity: Annonces::class)]
@@ -61,7 +61,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\ManyToOne(inversedBy: 'id_user')]
     #[ORM\JoinColumn(nullable: true)]
-    private ?UserState $id_state = null;
+    public ?UserState $id_state = null;
 
     private ?string $token ;
 

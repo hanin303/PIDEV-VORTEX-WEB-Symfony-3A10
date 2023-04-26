@@ -19,6 +19,8 @@
                 <th class="w-0">Numéro téléphone</th>
                 <th class="w-0">Carte identité</th>
                 <th class="w-25">Image</th>
+                <th class="w-25">Role</th>
+                <th class="w-25">Etat</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -34,9 +36,13 @@
                 <td>{{ user.numTel }}</td>
                 <td>{{ user.CIN }}</td>
                 <td>{{ user.image }}</td>
+                <td>{{ user.id_role.nom }}</td>
+                <td>{{ user.id_state.status }}</td>
+
                 <td>
                     <a class="btn btn-outline-info" href="{{ path('app_user_show', {'id': user.id}) }}">Afficher</a>
                     <a class="btn btn-outline-success" href="{{ path('app_user_edit', {'id': user.id}) }}">Modifier</a>
+                        {{ include('user/_delete_form.html.twig') }}
                 </td>
             </tr>
         {% else %}
