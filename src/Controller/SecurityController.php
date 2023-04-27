@@ -52,10 +52,9 @@ class SecurityController extends AbstractController
                 ]);
     }
     #[Route(path: '/connexion', name: 'security_login')]
-    public function login(MailerInterface $mailerInterface, AuthenticationUtils $authenticationUtils): Response
+    public function login(MailerInterface $mailerInterface, AuthenticationUtils $authenticationUtils,UserRepository $userRepository): Response
     {
-        $mail= new Mailer($mailerInterface);
-        $mail->sendEmail("test");
+        $user= new User();
 
         // if ($this->getUser()) {
         //     return $this->redirectToRoute('target_path');
@@ -65,7 +64,11 @@ class SecurityController extends AbstractController
         $error = $authenticationUtils->getLastAuthenticationError();
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
-
+        $user= $userRepository->findOneBy(['username'=>$lastUsername]);
+        if($user!=null){
+        $mail= new Mailer($mailerInterface);
+        $mail->sendEmail($user->getEmail());
+    }
         return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
     }
 

@@ -15,13 +15,13 @@ class Mailer
     {
         $this->mailer=$mailer;
     }
-    public function sendEmail(string $reciver)
+    public function sendEmail(string $receiver)
     {
         $email = (new Email())
-        ->from(Address::create('Fabien Potencier <swiftTransit12@hotmail.com>'))
-        ->to('riad.amami@gmail.com')
-        ->subject('Experimenting with Symfony Mailer and Mailtrap')
-        ->text('Hey! Learn the best practices ');
+        ->from(Address::create('Swift Transit <swiftTransit12@hotmail.com>'))
+        ->to($receiver)
+        ->subject('Récupération de mot de passe')
+        ->text('Votre code de récupération de mot de passe est :');
         // path to your Twig template
         $this->mailer->send($email);
 
