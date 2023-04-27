@@ -11,6 +11,7 @@ use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+
 /**
  * @extends ServiceEntityRepository<User>
  *
@@ -21,6 +22,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
+    private $rolerep;
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, User::class);
@@ -32,6 +34,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
      */
     public function save(User $entity, bool $flush = true): void
     {
+        
         $this->_em->persist($entity);
         if ($flush) {
             $this->_em->flush();
