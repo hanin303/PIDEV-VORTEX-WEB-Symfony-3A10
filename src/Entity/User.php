@@ -12,9 +12,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[UniqueEntity('email',"Adresse e-mail existe déjà")]
-#[UniqueEntity('username',"Username existe déjà")]
-#[UniqueEntity('CIN',"Carte identité existe dèjà")]
+
 
 
 /**

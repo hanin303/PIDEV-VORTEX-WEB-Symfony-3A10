@@ -101,7 +101,7 @@ class LoginAuthenticator extends AbstractFormLoginAuthenticator implements Passw
         $user= $this->security->getUser();
         
         if($user->getRoles()[0]=="client"){
-            return new RedirectResponse($this->urlGenerator->generate('security_registration'));
+            return new RedirectResponse($this->urlGenerator->generate('home'));
         }else if($user->getRoles()[0]=="super admin"){
             return new RedirectResponse($this->urlGenerator->generate('app_user_index'));
         }

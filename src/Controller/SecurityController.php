@@ -65,10 +65,10 @@ class SecurityController extends AbstractController
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
         $user= $userRepository->findOneBy(['username'=>$lastUsername]);
-        if($user!=null){
+        /*if($user!=null){
         $mail= new Mailer($mailerInterface);
         $mail->sendEmail($user->getEmail());
-    }
+    }*/
         return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
     }
 
