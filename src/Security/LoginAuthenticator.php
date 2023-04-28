@@ -104,6 +104,10 @@ class LoginAuthenticator extends AbstractFormLoginAuthenticator implements Passw
             return new RedirectResponse($this->urlGenerator->generate('home'));
         }else if($user->getRoles()[0]=="super admin"){
             return new RedirectResponse($this->urlGenerator->generate('app_user_index'));
+        }else if($user->getRoles()[0]=="conducteur"){
+            return new RedirectResponse($this->urlGenerator->generate('homeConducteur'));
+        }else if($user->getRoles()[0]=="admin station"){
+            return new RedirectResponse($this->urlGenerator->generate('homeAdminStation'));
         }
         return new RedirectResponse($this->urlGenerator->generate('home'));
     }

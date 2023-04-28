@@ -2,11 +2,10 @@
 
 namespace App\Form;
 
+use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use App\Entity\User;
-use Doctrine\ORM\Mapping\Entity;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -20,12 +19,10 @@ use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
-
-class RegistrationType extends AbstractType
+class ProfileType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
-    {        
-
+    {
         $builder
         ->add('nom',TextType::class,[
             'constraints' => [
@@ -53,11 +50,11 @@ class RegistrationType extends AbstractType
             'constraints' => [
                 new NotBlank(['message' => 'Vous devez saisir votre adresse e-mail']),
                 new Email(['message' => 'Vous devez saisir une adresse e-mail valide']),
-                /*new UniqueEntity([
+                new UniqueEntity([
                     'entityClass'=> User::class,
                     'fields' => ['email'],
                     'message' => 'adresse email existe déjà.',
-                ])*/
+                ])
             ],
         ])
         ->add('password',RepeatedType::class, [
@@ -86,11 +83,11 @@ class RegistrationType extends AbstractType
             'constraints'=>[
                 new NotBlank(['message' => 'Vous devez saisir votre numéro de carte identité']),
                 new Regex(['pattern'=>'/^\d{8}$/','message' => 'Vous devez saisir un numéro de carte identité valide']),
-                /*new UniqueEntity([
+                new UniqueEntity([
                     'entityClass'=>User::class,
                     'fields' => ['cin'],
                     'message' => 'numéro carte identité existe déjà.',
-                ])*/
+                ])
             ],
         ])
         ->add('images',FileType::class,[
@@ -111,14 +108,12 @@ class RegistrationType extends AbstractType
 ])
 
     ;
-}
-
+    }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            // Configure your form options here
+            'data_class' => User::class,
         ]);
     }
-
 }
