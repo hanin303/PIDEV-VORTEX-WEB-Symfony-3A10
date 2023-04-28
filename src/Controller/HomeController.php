@@ -40,12 +40,12 @@ class HomeController extends AbstractController
             $reservation->setHeureDepart($form->get('heure_depart')->getData());
             $reservation->setHeureArrive($form->get('heure_arrive')->getData());
             $entityManager = $this->getDoctrine()->getManager();
-            $reservation->setStatus("En attente"); 
+            $reservation->setStatus("En attente");
             $entityManager->persist($reservation);
             $entityManager->flush();
             $this->addFlash('success', 'reservation ajouter avec succès!');
             $reservation = new Reservation(); // create a new instance
-            $form = $this->createForm(ReservationType::class, $reservation); 
+            $form = $this->createForm(ReservationType::class, $reservation);
         }
         return $this->renderForm('reservation/reserver.html.twig', [
             'reservation' => $reservation,
@@ -63,8 +63,8 @@ class HomeController extends AbstractController
             'controller_name' => 'HomeController',
         ]);
     }
-  
-  
+
+
     #[Route('/lignes', name: 'lignes_urbaine')]
     public function listLignes(): Response
     {
