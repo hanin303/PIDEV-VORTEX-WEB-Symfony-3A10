@@ -33,63 +33,29 @@ class HomeController extends AbstractController
     {
         return $this->render('user/register.html.twig');
     }
-    #[Route('/profile', name: 'app_Front_profile', methods: ['GET', 'POST'])]
-public function editUser(Request $request, AuthenticationUtils $authenticationUtils,UserRepository $userRepository,imageUploader $imageUploader): Response
-{
-    $user= new User();
-    $error = $authenticationUtils->getLastAuthenticationError();
-    $lastUsername = $authenticationUtils->getLastUsername();
-    $user= $userRepository->findOneBy(['username'=>$lastUsername]);
-    $form = $this->createForm(ClientType::class, $user);
-    $form->handleRequest($request);
-    $pass=$form->get('password')->getData();
-    if ($form->isSubmitted() && $form->isValid()){
-        if(!$pass){
-          $this->addFlash('fail', 'Vous devez entrer votre ancien mot de passe');
-          return $this->redirectToRoute('app_Front_profile', [], Response::HTTP_SEE_OTHER);
-        }else{
-            if($pass==$user->getPassword()){
-                $user->setPassword($form->get('newPassword')->getData());
-                $userRepository->save($user, true);
-                $this->addFlash('success', 'Votre compte a été modifié avec succés');
-                return $this->redirectToRoute('app_Front_profile', [], Response::HTTP_SEE_OTHER);
-            }else{
-                $this->addFlash('fail', 'Votre ancien mot de passe est incorrect');
-                return $this->redirectToRoute('app_Front_profile', [], Response::HTTP_SEE_OTHER);
-            }    
-    }
-
-
-}        return $this->renderForm('Front/profile.html.twig', [
-    'last_username' => $lastUsername, 
-    'error' => $error,
-    'form' => $form
-]);
-}
-    #[Route('/reserver', name: 'reserver')]
-    public function newReservation(Request $request, ReservationRepository $reservationRepository): Response
+    #[Route('/{id}/change', name: 'app_edit3', methods: ['GET', 'POST'])]
+    public function edit(Request $request, User $user, UserRepository $userRepository,imageUploader $imageUploader): Response
     {
-        $reservation = new Reservation();
-        $form = $this->createForm(ReservationType::class, $reservation);
+        $form = $this->createForm(ClientType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $reservation->setHeureDepart($form->get('heure_depart')->getData());
-            $reservation->setHeureArrive($form->get('heure_arrive')->getData());
-            $entityManager = $this->getDoctrine()->getManager();
-            $reservation->setStatus("En attente"); 
-            $entityManager->persist($reservation);
-            $entityManager->flush();
-            $this->addFlash('success', 'reservation ajouter avec succès!');
-            $reservation = new Reservation(); // create a new instance
-            $form = $this->createForm(ReservationType::class, $reservation); 
+            $file=$form->get('images')->getData();
+            if($file){
+            $imageFileName = $imageUploader->upload($file);
+            $user->setImage($imageFileName);
+            }
+            $userRepository->save($user, true);
+
+            return $this->redirectToRoute('home', [], Response::HTTP_SEE_OTHER);
         }
-        return $this->renderForm('reservation/reserver.html.twig', [
-            'reservation' => $reservation,
+
+        return $this->renderForm('Front/profile.html.twig', [
+            'user' => $user,
             'form' => $form,
         ]);
     }
-
+   
     #[Route('/tarifs', name: 'tarif_ticket')]
     public function showListTickets(TicketRepository $ticketRepository): Response
     {

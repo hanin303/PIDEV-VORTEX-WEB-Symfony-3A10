@@ -143,6 +143,7 @@ use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Validator\Constraints\File;
 class ProfileType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -181,6 +182,23 @@ class ProfileType extends AbstractType
                     new Regex(['pattern'=>'/^\d{8}$/','message' => 'numéro de carte identité non valide']),
                 ],
             ])
+            ->add('images',FileType::class,[
+                'required'=>false,
+                'mapped'=>false,
+                'attr' => ['accept' => 'image/jpeg, image/png ,image/jpg'],
+                'constraints'=>
+                [new File([
+                    'maxSize'=>'1024K',
+                    'mimeTypes'=>[
+                       'image/jpeg',
+                       'image/png',
+                       'image/jpg'
+            ],
+            'mimeTypesMessage'=> 'vous devez choisir une image valide',
+        ]),
+    ],
+    ])
+    
         ;
     }
 

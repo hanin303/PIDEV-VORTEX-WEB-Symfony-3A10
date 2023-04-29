@@ -29,12 +29,17 @@
 				<!-- Header -->
 					<header id="header">
 						<a href="{{ path('home') }}" class="logo">Swift Transit </a>
+						
 					</header>
 
 				<!-- Nav -->
 					<nav id="nav">
 						<ul class="links">
-							<li class="active"><a href="{{ path('app_Front_profile') }}">Mon profile</a></li>
+							 {% if not app.user %}
+                             {% else %}
+                             <a class="dropdown-item d-flex align-items-center" href="{{ path('app_edit2',{'id': app.user.id}) }}">
+							 <li class="active"><a href ="{{ path('app_edit3',{'id': app.user.id}) }}">Mon profile</a></li
+                             {% endif %}
                             <li><a href ="#" >Lignes Urbaines</a></li>
 							<li><a href ="#">Itinéraires</a></li>
 							<li><a href ="{{ path('voyager_commune') }}">Communes</a></li>
@@ -54,6 +59,10 @@
 				{% block body %}
 					<div id="main">
 						<!-- Featured Post -->
+						<header class="major">
+		                <span class="date">Welcome</span>
+			            <h1>Mon profile</h1>
+			             </header>
 							<article class="post featured">
 								<div class="row" style="text-align: center;align-items: center;justify-content: center;margin: 100px 500px 30px;">    
 

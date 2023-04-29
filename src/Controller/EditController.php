@@ -32,7 +32,11 @@ class EditController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
+            $file=$form->get('images')->getData();
+            if($file){
+            $imageFileName = $imageUploader->upload($file);
+            $user->setImage($imageFileName);
+            }
             $userRepository->save($user, true);
 
             return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
@@ -43,7 +47,8 @@ class EditController extends AbstractController
             'form' => $form,
         ]);
     }
-    #[Route('/edit', name: 'app_edit', methods: ['GET', 'POST'])]
+
+    /*#[Route('/edit', name: 'app_edit', methods: ['GET', 'POST'])]
     public function editAdmin(Request $request, AuthenticationUtils $authenticationUtils, UserRepository $userRepository, imageUploader $imageUploader,UserRepository $userPasswordEncoder): Response
     {
         $user= new User();
@@ -80,5 +85,5 @@ return $this->render('edit/profile.html.twig', [
     'form' => $form->createView(),
 ]);
 
-} 
+}*/ 
 }

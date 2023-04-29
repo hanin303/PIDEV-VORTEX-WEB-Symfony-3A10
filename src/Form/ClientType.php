@@ -27,72 +27,35 @@ class ClientType extends AbstractType
         $builder
         ->add('nom',TextType::class,[
             'constraints' => [
-                new NotBlank(['message' => 'Vous devez saisir votre nom']),
+                new NotBlank(['message' => 'nom obligatoire']),
             ],
         ])
         ->add('prenom',TextType::class,[
             'constraints' => [
-                new NotBlank(['message' => 'Vous devez saisir votre prénom']),
+                new NotBlank(['message' => 'prénom obligatoire']),
             ],
         ])
         ->add('username',TextType::class,[
             'constraints' => [
-                new NotBlank(['message' => 'Vous devez saisir votre username']),
-                new UniqueEntity([
-                    'entityClass'=> User::class,
-                    'fields' => ['username'],
-                    'message' => 'username existe déjà.',
-                ])
-                
-
+                new NotBlank(['message' => 'username obligatoire']),
             ],
         ])
         ->add('email',EmailType::class, [
             'constraints' => [
-                new NotBlank(['message' => 'Vous devez saisir votre adresse e-mail']),
-                new Email(['message' => 'Vous devez saisir une adresse e-mail valide']),
-                new UniqueEntity([
-                    'entityClass'=> User::class,
-                    'fields' => ['email'],
-                    'message' => 'adresse email existe déjà.',
-                ])
+                new NotBlank(['message' => 'adresse e-mail obligatoire']),
+                new Email(['message' => 'adresse e-mail valide non valide']),
             ],
         ])
-        ->add('password',PasswordType::class,[
-            'constraints' => [
-                new NotBlank(['message' => 'Vous devez entrer votre ancien mot de passe']),
-                new Length(['min' => 8, 'max' => 30,
-                'minMessage' => 'Le mot de passe doit au moins contenir 8 caractéres',
-                'maxMessage' => 'le mot de passe ne doit pas dépasser 30 caractéres',]),
-            ]
-        ])
-        ->add('newPassword', PasswordType::class, [
-            'mapped' => false,
-            'required' => false,
-            'constraints' => [
-                new Length([
-                    'min' => 8,
-                    'max' => 30,
-                    'minMessage' => 'Le mot de passe doit au moins contenir 8 caractéres',
-                    'maxMessage' => 'le mot de passe ne doit pas dépasser 30 caractéres',
-                ]),
-            ],
-        ])  
         ->add('num_tel',NumberType::class,[
             'constraints'=>[
-                new NotBlank(['message' => 'Vous devez saisir votre numéro de téléphone']),
-                new Regex(['pattern'=>'/^\d{8}$/','message' => 'Vous devez saisir un numéro de téléphone valide']),
+                new NotBlank(['message' => 'numéro de téléphone obligatoire']),
+                new Regex(['pattern'=>'/^\d{8}$/','message' => 'numéro de téléphone non valide']),
             ],
         ])
         ->add('CIN',NumberType::class,[
             'constraints'=>[
-                new NotBlank(['message' => 'Vous devez saisir votre numéro de carte identité']),
-                new Regex(['pattern'=>'/^\d{8}$/','message' => 'Vous devez saisir un numéro de carte identité valide']),
-                new UniqueEntity([
-                    'entityClass'=>User::class,
-                    'fields' => ['cin'],
-                    'message' => 'numéro carte identité existe déjà.',
-                ])
+                new NotBlank(['message' => 'numéro de carte identité obligatoire']),
+                new Regex(['pattern'=>'/^\d{8}$/','message' => 'numéro de carte identité non valide']),
             ],
         ])
         ->add('images',FileType::class,[
@@ -111,8 +74,9 @@ class ClientType extends AbstractType
     ]),
 ],
 ])
+
     ;
-    }
+}
 
     public function configureOptions(OptionsResolver $resolver): void
     {

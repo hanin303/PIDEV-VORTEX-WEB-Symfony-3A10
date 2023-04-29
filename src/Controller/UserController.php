@@ -75,7 +75,7 @@ class UserController extends AbstractController
         ]);
     }
     #[Route('/register', name: 'app_user_register', methods: ['GET', 'POST'])]
-    public function register(Request $request, UserRepository $userRepository,RoleRepository $roleRepository,UserStateRepository $userStateRepository,imageUploader $imageUploader,): Response
+    public function register(Request $request, UserRepository $userRepository,RoleRepository $roleRepository,UserStateRepository $userStateRepository,imageUploader $imageUploader): Response
     {
         $user = new User();
         $user->setIdRole($roleRepository->find(4));
