@@ -1,5 +1,5 @@
 <?php
-
+/*
 namespace App\Form;
 
 use App\Entity\User;
@@ -40,12 +40,7 @@ class ProfileType extends AbstractType
         ->add('username',TextType::class,[
             'constraints' => [
                 new NotBlank(['message' => 'Vous devez saisir votre username']),
-                new UniqueEntity([
-                    'entityClass'=> User::class,
-                    'fields' => ['username'],
-                    'message' => 'username existe déjà.',
-                ])
-                
+
 
             ],
         ])
@@ -61,7 +56,9 @@ class ProfileType extends AbstractType
             ],
         ])
         ->add('password',PasswordType::class,[
+            'required' => false,
             'constraints' => [
+
                 new NotBlank(['message' => 'Vous devez entrer votre ancien mot de passe']),
                 new Length(['min' => 8, 'max' => 30,
                 'minMessage' => 'Le mot de passe doit au moins contenir 8 caractéres',
@@ -119,7 +116,79 @@ class ProfileType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
+            'empty_data' => " ",
             'data_class' => User::class,
         ]);
     }
+}
+*/
+namespace App\Form;
+
+use App\Entity\User;
+use App\Entity\UserState;
+use App\Entity\Role;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\BrowserKit\Request;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+class ProfileType extends AbstractType
+{
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
+        $builder
+            ->add('nom',TextType::class,[
+                'constraints' => [
+                    new NotBlank(['message' => 'nom obligatoire']),
+                ],
+            ])
+            ->add('prenom',TextType::class,[
+                'constraints' => [
+                    new NotBlank(['message' => 'prénom obligatoire']),
+                ],
+            ])
+            ->add('username',TextType::class,[
+                'constraints' => [
+                    new NotBlank(['message' => 'username obligatoire']),
+                ],
+            ])
+            ->add('email',EmailType::class, [
+                'constraints' => [
+                    new NotBlank(['message' => 'adresse e-mail obligatoire']),
+                    new Email(['message' => 'adresse e-mail valide non valide']),
+                ],
+            ])
+            ->add('num_tel',NumberType::class,[
+                'constraints'=>[
+                    new NotBlank(['message' => 'numéro de téléphone obligatoire']),
+                    new Regex(['pattern'=>'/^\d{8}$/','message' => 'numéro de téléphone non valide']),
+                ],
+            ])
+            ->add('CIN',NumberType::class,[
+                'constraints'=>[
+                    new NotBlank(['message' => 'numéro de carte identité obligatoire']),
+                    new Regex(['pattern'=>'/^\d{8}$/','message' => 'numéro de carte identité non valide']),
+                ],
+            ])
+        ;
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'data_class' => User::class,
+        ]);
+    }
+
 }

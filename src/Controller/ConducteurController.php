@@ -39,7 +39,7 @@ class ConducteurController extends AbstractController
     {
         return $this->render('user/register.html.twig');
     }
-    public function editUser(Request $request, AuthenticationUtils $authenticationUtils,UserRepository $userRepository,imageUploader $imageUploader): Response
+public function editUser(Request $request, AuthenticationUtils $authenticationUtils,UserRepository $userRepository,imageUploader $imageUploader): Response
 {
     $user= new User();
     $error = $authenticationUtils->getLastAuthenticationError();

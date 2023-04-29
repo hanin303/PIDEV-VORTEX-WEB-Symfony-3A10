@@ -22,7 +22,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
-    private $rolerep;
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, User::class);
@@ -74,24 +73,21 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getQuery()
             ->getOneOrNullResult()
             ;
+      //  $this->_em->createQuery('select u from App\Entity\User u where username ')
     }
 
     // /**
     //  * @return User[] Returns an array of User objects
     //  */
-    /*
-    public function findByExampleField($value)
+    public function LikeUserName($value)
     {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('u.id', 'ASC')
-            ->setMaxResults(10)
+        $query=$this->createQueryBuilder('u');
+        return $query
+            ->andWhere($query->expr()->like('u.username',':username') )
+            ->setParameter('username', '%'.$value.'%')
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
-    */
 
     /*
     public function findOneBySomeField($value): ?User
