@@ -40,11 +40,11 @@ class RegistrationType extends AbstractType
         ->add('username',TextType::class,[
             'constraints' => [
                 new NotBlank(['message' => 'Vous devez saisir votre username']),
-                new UniqueEntity([
+                /*new UniqueEntity([
                     'entityClass'=> User::class,
                     'fields' => ['username'],
                     'message' => 'username existe déjà.',
-                ])
+                ])*/
                 
 
             ],

@@ -9,8 +9,11 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints\UniqueEntity;
 use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface;
+use Symfony\Component\Validator\Constraints\Unique;
+use Symfony\Component\Validator\Validation;
+
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 
@@ -35,7 +38,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $prenom = null;
 
     #[ORM\Column(length: 255,unique :true)]
-    #[Assert\UniqueEntity(message:"username existe déjà")]
     private ?string $username = null;
 
     #[ORM\Column(length: 255,unique :true)]

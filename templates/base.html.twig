@@ -218,7 +218,7 @@
 
           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
             <li class="dropdown-header">
-              <h6>{{app.user.nom}}</h6>
+              <h6>{{app.user.nom}} {{app.user.prenom}}</h6>
               <span>Administrateur</span>
             </li>
             <li>
@@ -239,9 +239,9 @@
             </li>
 
             <li>
-              <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+              <a class="dropdown-item d-flex align-items-center" href="{{ path('app_password_admin',{'id': app.user.id}) }}">
                 <i class="bi bi-gear"></i>
-                <span>Account Settings</span>
+                <span>changer mot de passe</span>
               </a>
             </li>
             <li>

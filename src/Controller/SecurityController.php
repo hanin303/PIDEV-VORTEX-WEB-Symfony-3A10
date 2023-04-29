@@ -77,6 +77,36 @@ class SecurityController extends AbstractController
     {
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
+    #[Route('/password', name: 'app_password_change')]
+    public function changePasswordClient(RoleRepository $roleRepository, AuthenticationUtils $authenticationUtils,UserRepository $userRepository, Request $request,UserPasswordEncoderInterface $userPasswordEncoder,EntityManagerInterface $entityManager)
+    {
+        $user= new User();
+        $lastUsername = $authenticationUtils->getLastUsername();
+        $newPassword = $request->request->get('password');
+        if($newPassword!=null){
+        $user= $userRepository->findOneBy(['username'=>$lastUsername]);
+        $user->setPassword($userPasswordEncoder->encodePassword($user,$newPassword));
+        $userRepository->save($user, true);
+        $this->addFlash('success', 'Votre mot de passe a été modifié avec succès.');
+        return $this->redirectToRoute('home');
+        }
+        return $this->render('Front/change.html.twig');
+    }
+    #[Route('/pass', name: 'app_password_admin')]
+    public function changePasswordAdmin(RoleRepository $roleRepository, AuthenticationUtils $authenticationUtils,UserRepository $userRepository, Request $request,UserPasswordEncoderInterface $userPasswordEncoder,EntityManagerInterface $entityManager)
+    {
+        $user= new User();
+        $lastUsername = $authenticationUtils->getLastUsername();
+        $newPassword = $request->request->get('password');
+        if($newPassword!=null){
+        $user= $userRepository->findOneBy(['username'=>$lastUsername]);
+        $user->setPassword($userPasswordEncoder->encodePassword($user,$newPassword));
+        $userRepository->save($user, true);
+        $this->addFlash('success', 'Votre mot de passe a été modifié avec succès.');
+        return $this->redirectToRoute('app_user_index');
+        }
+        return $this->render('user/change.html.twig');
+    }
 }
     
 

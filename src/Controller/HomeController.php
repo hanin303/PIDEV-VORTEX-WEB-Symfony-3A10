@@ -55,6 +55,30 @@ class HomeController extends AbstractController
             'form' => $form,
         ]);
     }
+    #[Route('/reserver', name: 'reserver')]
+    public function newReservation(Request $request, ReservationRepository $reservationRepository): Response
+    {
+        $reservation = new Reservation();
+        $form = $this->createForm(ReservationType::class, $reservation);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $reservation->setHeureDepart($form->get('heure_depart')->getData());
+            $reservation->setHeureArrive($form->get('heure_arrive')->getData());
+            $entityManager = $this->getDoctrine()->getManager();
+            $reservation->setStatus("En attente"); 
+            $entityManager->persist($reservation);
+            $entityManager->flush();
+            $this->addFlash('success', 'reservation ajouter avec succès!');
+            $reservation = new Reservation(); // create a new instance
+            $form = $this->createForm(ReservationType::class, $reservation); 
+        }
+        return $this->renderForm('reservation/reserver.html.twig', [
+            'reservation' => $reservation,
+            'form' => $form,
+        ]);
+    }
+
    
     #[Route('/tarifs', name: 'tarif_ticket')]
     public function showListTickets(TicketRepository $ticketRepository): Response

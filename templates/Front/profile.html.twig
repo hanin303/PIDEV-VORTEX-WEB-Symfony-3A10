@@ -34,20 +34,49 @@
 
 				<!-- Nav -->
 					<nav id="nav">
+						{% if app.user.id_role.id == 2 %}
 						<ul class="links">
+							<li><a href ="#" >Lignes Urbaines</a></li>
+							<li><a href ="#">Itinéraires</a></li>
 							 {% if not app.user %}
                              {% else %}
                              <a class="dropdown-item d-flex align-items-center" href="{{ path('app_edit2',{'id': app.user.id}) }}">
-							 <li class="active"><a href ="{{ path('app_edit3',{'id': app.user.id}) }}">Mon profile</a></li
+							 <li><a href ="{{ path('app_edit3',{'id': app.user.id}) }}">Mon profile</a></li
                              {% endif %}
-                            <li><a href ="#" >Lignes Urbaines</a></li>
-							<li><a href ="#">Itinéraires</a></li>
 							<li><a href ="{{ path('voyager_commune') }}">Communes</a></li>
 							<li><a href ="{{ path('tarif_ticket') }}">Tarifs</a></li>
 							<li><a href ="{{ path('reserver') }}">Réserver</a></li>
-							
+							<li><a href="{{ path('app_password_change') }}">Password</a></li>
 							
 						</ul>
+				    {% elseif app.user.id_role.id == 3 %}
+					<ul class="links">
+							<li><a href ="#">Itinéraires</a></li>
+							 {% if not app.user %}
+                             {% else %}
+                             <a class="dropdown-item d-flex align-items-center" href="{{ path('app_edit2',{'id': app.user.id}) }}">
+							 <li><a href ="{{ path('app_edit3',{'id': app.user.id}) }}">Mon profile</a></li>
+                             {% endif %}
+							<li><a href ="{{ path('voyager_commune') }}">Communes</a></li>
+							<li><a href ="{{ path('reserver') }}">Réserver</a></li>
+							<li><a href="{{ path('app_password_change') }}">Password</a></li>
+							
+						</ul>
+					{% else %}
+					<ul class="links">
+							 {% if not app.user %}
+                             {% else %}
+                             <a class="dropdown-item d-flex align-items-center" href="{{ path('app_edit2',{'id': app.user.id}) }}">
+							 <li><a href ="{{ path('app_edit3',{'id': app.user.id}) }}">Mon profile</a></li
+                             {% endif %}
+							<li><a href ="{{ path('tarif_ticket') }}">Tarifs</a></li>
+							<li><a href ="{{ path('reserver') }}">Réserver</a></li>
+			                <li><a href="{{ path('app_password_change') }}">Password</a></li>
+							
+						</ul>
+					{% endif %}
+
+						<a class="btn btn-outline-info" href="{{ path('app_logout') }}">Déconnexion</a>
 						<ul class="icons">
 							<li><a href="#" class="icon brands fab fa-opencart"><span class="label">Twitter</span></a></li>
 							{#<li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>#}
