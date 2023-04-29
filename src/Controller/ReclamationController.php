@@ -28,28 +28,56 @@ class ReclamationController extends AbstractController
     }
 
 
-    #[Route('/reclamations', name: 'app_reclamation')]
-    public function index(Request $request, PaginatorInterface $paginator): Response
-    {
-        $entityManager = $this->getDoctrine()->getManager();
-        $repository = $entityManager->getRepository(Reclamation::class);
-        $query = $repository->createQueryBuilder('c')
-            ->orderBy('c.id_reclamation', 'DESC');
+    // #[Route('/reclamations', name: 'app_reclamation')]
+    // public function index(Request $request, PaginatorInterface $paginator): Response
+    // {
+    //     $entityManager = $this->getDoctrine()->getManager();
+    //     $repository = $entityManager->getRepository(Reclamation::class);
+    //     $query = $repository->createQueryBuilder('c')
+    //         ->orderBy('c.id_reclamation', 'DESC');
 
         
-        // $data = $this->getDoctrine()->getRepository(Reclamation::class)->findAll();
-        // return $this->render('reclamation/index.html.twig', [
-        //     'list' => $data  
-        $data = $paginator->paginate(     ////jdeeed
-            $query, // Requête contenant les données à paginer (ici notre requête custom)
-            $request->query->getInt('page', 1), // Numéro de la page en cours, passé dans l'URL, 1 si aucune page
-            5 // Nombre de résultats par page
-        );
+    //     // $data = $this->getDoctrine()->getRepository(Reclamation::class)->findAll();
+    //     // return $this->render('reclamation/index.html.twig', [
+    //     //     'list' => $data  
+    //     $data = $paginator->paginate(     ////jdeeed
+    //         $query, // Requête contenant les données à paginer (ici notre requête custom)
+    //         $request->query->getInt('page', 1), // Numéro de la page en cours, passé dans l'URL, 1 si aucune page
+    //         5 // Nombre de résultats par page
+    //     );
 
-        return $this->render('reclamation/index.html.twig', [
-            'list' => $data /////jdeeed
-        ]);
-    }
+    //     return $this->render('reclamation/index.html.twig', [
+    //         'list' => $data /////jdeeed
+    //     ]);
+    // }
+
+    #[Route('/reclamations', name: 'app_reclamation')]
+public function index(Request $request, PaginatorInterface $paginator): Response
+{
+    $entityManager = $this->getDoctrine()->getManager();
+    $repository = $entityManager->getRepository(Reclamation::class);
+    $query = $repository->createQueryBuilder('c')
+        ->orderBy('c.id_reclamation', 'DESC');
+
+    // Get the value of the items per page from the request
+    $itemsPerPage = $request->query->getInt('itemsPerPage', 5);
+
+    $data = $paginator->paginate( 
+        $query,
+        $request->query->getInt('page', 1), 
+        $itemsPerPage
+    );
+
+    // Create an array of available items per page options
+    $availableItemsPerPage = [5, 10, 25, 50, 100];
+
+    return $this->render('reclamation/index.html.twig', [
+        'list' => $data,
+        'itemsPerPage' => $itemsPerPage,
+        'availableItemsPerPage' => $availableItemsPerPage,
+    ]);
+}
+
 
     
 
