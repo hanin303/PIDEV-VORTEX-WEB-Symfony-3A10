@@ -34,12 +34,13 @@
 				<!-- Nav -->
 					<nav id="nav">
 						<ul class="links">
-							<li><a href ="#" >Lignes Urbaines</a></li>
+							<li class="active"><a href="{{ path('app_Front_profile') }}">Mon profile</a></li>
+                            <li><a href ="#" >Lignes Urbaines</a></li>
 							<li><a href ="#">Itinéraires</a></li>
-							<li><a href ="{{ path('app_Front_profile') }}">Mon profile</a></li
 							<li><a href ="{{ path('voyager_commune') }}">Communes</a></li>
 							<li><a href ="{{ path('tarif_ticket') }}">Tarifs</a></li>
 							<li><a href ="{{ path('reserver') }}">Réserver</a></li>
+							
 							
 						</ul>
 						<ul class="icons">
@@ -54,7 +55,12 @@
 					<div id="main">
 						<!-- Featured Post -->
 							<article class="post featured">
-								
+								<div class="row" style="text-align: center;align-items: center;justify-content: center;margin: 100px 500px 30px;">    
+
+                               {{ form_start(form,{'attr': {'novalidate': 'novalidate'}} ) }}
+                               {{ form_widget(form) }}    
+                               <button type="submit" id="submit-btn" class="btn btn-primary">Changer</button>
+                               {{ form_end(form) }}
 							</article>
 
 					</div>

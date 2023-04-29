@@ -71,6 +71,7 @@ class UserController extends AbstractController
         return $this->renderForm('user/new.html.twig', [
             'user' => $user,
             'form' => $form,
+        
         ]);
     }
     #[Route('/register', name: 'app_user_register', methods: ['GET', 'POST'])]
@@ -108,26 +109,7 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/edit', name: 'app_user_profile', methods: ['GET', 'POST'])]
-    public function editUser(Request $request, AuthenticationUtils $authenticationUtils,UserRepository $userRepository,imageUploader $imageUploader): Response
-    {
-        $lastUsername = $authenticationUtils->getLastUsername();
-        $user= $userRepository->findOneBy(['username'=>$lastUsername]);
-        $form = $this->createForm(ProfileType::class, $user);
-        $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            
-            $userRepository->save($user, true);
-            $this->addFlash('success', 'Votre compte a été modifié avec succés');
-            return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->renderForm('user/profile.html.twig', [
-            'user' => $user,
-            'form' => $form,
-        ]);
-    }
     #[Route('/{id}/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, User $user, UserRepository $userRepository,imageUploader $imageUploader): Response
     {

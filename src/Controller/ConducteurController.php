@@ -13,6 +13,17 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\CommuneRepository;
 use App\Form\CommuneType;
 use App\Entity\Commune;
+use App\Entity\User;
+use App\Repository\UserRepository;
+use App\services\imageUploader;
+use App\Form\ClientType;
+use Monolog\Logger;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\DomCrawler\Image;
+use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\Validator\Constraints\Unique;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class ConducteurController extends AbstractController
 {
@@ -20,7 +31,7 @@ class ConducteurController extends AbstractController
     public function index(): Response
     {
         return $this->render('Front/front.html.twig', [
-            'controller_name' => 'HomeController',
+            'controller_name' => 'ConducteurController',
         ]);
     }
     #[Route('/register', name: 'Inscription')]
@@ -28,6 +39,38 @@ class ConducteurController extends AbstractController
     {
         return $this->render('user/register.html.twig');
     }
+    public function editUser(Request $request, AuthenticationUtils $authenticationUtils,UserRepository $userRepository,imageUploader $imageUploader): Response
+{
+    $user= new User();
+    $error = $authenticationUtils->getLastAuthenticationError();
+    $lastUsername = $authenticationUtils->getLastUsername();
+    $user= $userRepository->findOneBy(['username'=>$lastUsername]);
+    $form = $this->createForm(ClientType::class, $user);
+    $form->handleRequest($request);
+    $pass=$form->get('password')->getData();
+    if ($form->isSubmitted() && $form->isValid()){
+        if(!$pass){
+          $this->addFlash('fail', 'Vous devez entrer votre ancien mot de passe');
+          return $this->redirectToRoute('app_Front_profile', [], Response::HTTP_SEE_OTHER);
+        }else{
+            if($pass==$user->getPassword()){
+                $user->setPassword($form->get('newPassword')->getData());
+                $userRepository->save($user, true);
+                $this->addFlash('success', 'Votre compte a été modifié avec succés');
+                return $this->redirectToRoute('app_Front_profile', [], Response::HTTP_SEE_OTHER);
+            }else{
+                $this->addFlash('fail', 'Votre ancien mot de passe est incorrect');
+                return $this->redirectToRoute('app_Front_profile', [], Response::HTTP_SEE_OTHER);
+            }    
+    }
+
+
+}        return $this->renderForm('Front/profile.html.twig', [
+    'last_username' => $lastUsername, 
+    'error' => $error,
+    'form' => $form
+]);
+}
 
     #[Route('/reserver', name: 'reserver')]
     public function newReservation(Request $request, ReservationRepository $reservationRepository): Response
@@ -60,7 +103,7 @@ class ConducteurController extends AbstractController
         return $this->render('ticket/tarif.html.twig', [
             //index.html.twig
             'tickets' => $tickets,
-            'controller_name' => 'HomeController',
+            'controller_name' => 'ConducteurController',
         ]);
     }
   
