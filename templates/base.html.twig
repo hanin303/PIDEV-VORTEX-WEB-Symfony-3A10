@@ -33,6 +33,7 @@
   <script src={{ asset('Back/Libraries/jquery/dist/jquery.min.js') }}></script>
 
    <script src="{{ asset('Back/js/main.js') }}"></script>
+   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         {% endblock %}
 
 
@@ -281,12 +282,10 @@
     <ul class="sidebar-nav" id="sidebar-nav">
 
       <li class="nav-item">
-        <a class="nav-link " href="back.html.twig">
-          <i class="bi bi-grid"></i>
-          <span>Dashboard</span>
+         <a class="nav-link" href="{{ path('app_dashboard') }}">
+          <i class="bi bi-grid"></i><span>Dashboard</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
       </li><!-- End Dashboard Nav -->
-
         
       </li><!-- End Components Nav -->
 
@@ -313,7 +312,9 @@
       </li><!-- End Tables Nav -->
 
       <li class="nav-item">
+        <a class="nav-link" href="#"> 
          <a class="nav-link" href="{{ path('app_commune_index') }}"> 
+
           <i class="bi bi-bar-chart"></i><span>Commune</span><i class="bi bi-chevron-down ms-auto"></i>
 
         <a class="nav-link" href="#"> 
@@ -327,21 +328,35 @@
         </a>
       </li><!-- End Charts Nav -->
 
-      <li class="nav-item">
-         <a class="nav-link"  href="#"> 
-          <i class="bi bi-exclamation-triangle-fill"></i><span>Gestion Reclamations</span><i class="bi bi-chevron-down ms-auto"></i>
+       <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-layout-text-window-reverse"></i><span>Reclamations</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
-       
-      </li><!-- End Icons Nav -->
+        <ul id="tables-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+          <li>
+            <a href="{{ path('app_reclamation_reponse') }}">
+              <i class="bi bi-circle"></i><span>Reclamations non repondus</span>
+            </a>
+          </li>
+          <li>
+            <a href="{{ path('app_reponse') }}">
+              <i class="bi bi-circle"></i><span>Reclamations repondus</span>
+            </a>
+          </li>
+        </ul>
+      </li>
 
       <li class="nav-item">
-        g<a class="nav-link"  href="{{ path('app_trajet_index') }}"> 
+        <a class="nav-link"  href="{{ path('app_trajet_index') }}"> 
           <i class="bi bi-gem"></i><span>Trajet</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
        
       </li><!-- End Icons Nav -->
 
       <li class="nav-item">
+        <a class="nav-link"  href="#">
+          <i class="bi bi-gem"></i><span>Reclamation</span><i class="bi bi-chevron-down ms-auto"></i>
+          
          <a class="nav-link"  href="{{ path('app_iteneraire_index') }}"> 
           <i class="bi bi-gem"></i><span>Itineraire</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
@@ -351,6 +366,7 @@
       <li class="nav-heading">Pages</li>
 
       <li class="nav-item">
+         <a class="nav-link" href="#">
          <a class="nav-link" href="{{ path('app_user_index') }}"> 
           <i class="bi bi-person"></i>
           <span>Gestion utilisateurs</span>

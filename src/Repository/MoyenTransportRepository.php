@@ -63,4 +63,55 @@ class MoyenTransportRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
+public function findmoybyid($id)
+    {
+
+            return $this->createQueryBuilder('m')
+            ->where('m.id LIKE :id')
+            ->setParameter('id', '%'.$id.'%')
+            ->getQuery()
+            ->getResult();
+    }
+    public function findByTypeVehicule($type)
+{
+    return $this->createQueryBuilder('v')
+        ->where('v.type_vehicule = :type')
+        ->setParameter('type', $type)
+        ->getQuery()
+        ->getResult();
+}
+public function countByTypeVehicule()
+{
+    return $this->createQueryBuilder('mt')
+        ->select('mt.type_vehicule, COUNT(mt.id) AS count')
+        ->groupBy('mt.type_vehicule')
+        ->getQuery()
+        ->getResult();
+}
+
+public function findByMarque($marque)
+{
+    return $this->createQueryBuilder('m')
+        ->where('m.marque LIKE :marque')
+        ->setParameter('marque', '%'.$marque.'%')
+        ->getQuery()
+        ->getResult();
+}
+
+public function vehiculeTypeStats()
+{
+    $em = $this->getDoctrine()->getManager();
+    $data = $em->getRepository('AppBundle:Vehicule')->createQueryBuilder('v')
+        ->select('v.TypeVehicule, COUNT(v.id) as count')
+        ->groupBy('v.TypeVehicule')
+        ->getQuery()
+        ->getResult();
+    
+    return $this->render('stats/vehiculeTypeStats.html.twig', [
+        'data' => $data
+    ]);
+}
+
+        
 }

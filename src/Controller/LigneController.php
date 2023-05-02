@@ -4,11 +4,14 @@ namespace App\Controller;
 
 use App\Entity\Ligne;
 use App\Form\LigneType;
+use App\Entity\MoyenTransport;
 use App\Repository\LigneRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Joli\JoliNotif\Notification;
+use Joli\JoliNotif\NotifierFactory;
 
 #[Route('/ligne')]
 class LigneController extends AbstractController
@@ -29,6 +32,17 @@ class LigneController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $notifier = NotifierFactory::create();
+
+            // Create your notification
+             $notification =
+                         (new Notification())
+                         ->setTitle('Swift Transit')
+                         ->setBody('Vous avez ajoutez une ligne')
+                         ->setIcon(__DIR__.'/logo.png')
+                         
+      ;
+      $notifier->send($notification);
             $ligneRepository->save($ligne, true);
 
             return $this->redirectToRoute('app_ligne_index', [], Response::HTTP_SEE_OTHER);

@@ -16,24 +16,24 @@ class Reservation
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Assert\NotBlank(message:"Date reservation is required")]
+    #[Assert\NotBlank(message: "Date reservation is required")]
     //#[Assert\DateTime(format: 'Y-m-d', message: 'Invalid date format.')]
     #[Assert\GreaterThanOrEqual(value: 'today', message: 'Date cannot be in the past.')]
     private ?\DateTimeInterface $date_reservation = null;
 
     #[ORM\Column(type: Types::TIME_MUTABLE)]
-    #[Assert\NotBlank(message:"heure depart is required")]
+    #[Assert\NotBlank(message: "heure depart is required")]
     private ?\DateTimeInterface $heure_depart = null;
 
     #[ORM\Column(type: Types::TIME_MUTABLE)]
-    #[Assert\NotBlank(message:"heure arriver is required")]
+    #[Assert\NotBlank(message: "heure arriver is required")]
     private ?\DateTimeInterface $heure_arrive = null;
 
     #[ORM\Column(length: 255)]
     private ?string $status = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(message:"Type Ticket is required")]
+    #[Assert\NotBlank(message: "Type Ticket is required")]
     #[Assert\Length(max: 30, maxMessage: "Le type de votre ticket ne peut pas être plus de {{ limit }} caractères.")]
     private ?string $type_ticket = null;
 
@@ -43,16 +43,16 @@ class Reservation
 
     #[ORM\ManyToOne(inversedBy: 'id_reservation')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Assert\NotBlank(message:"Moyen Transport is required")]
-    private ?MoyenTransport $id_moy = null;
+    #[Assert\NotBlank(message: "Moyen Transport is required")]
+    public ?MoyenTransport $id_moy = null;
 
     #[ORM\ManyToOne(inversedBy: 'id_reservation')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Assert\NotBlank(message:"itineraire is required")]
-    private ?Iteneraire $id_it = null;
+    #[Assert\NotBlank(message: "itineraire is required")]
+    public ?Iteneraire $id_it = null;
 
     #[ORM\OneToOne(mappedBy: 'id_reservation', cascade: ['persist', 'remove'])]
-    private ?Ticket $id_ticket = null;
+    public ?Ticket $id_ticket = null;
 
 
     public function getId(): ?int
@@ -134,7 +134,7 @@ class Reservation
         return $this;
     }
 
-    
+
     public function getIdIt(): ?Iteneraire
     {
         return $this->id_it;
