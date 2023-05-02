@@ -5,6 +5,9 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Entity\Trajet;
+use App\Form\TrajetType;
+use App\Repository\TrajetRepository;
 
 class HomeController extends AbstractController
 {
@@ -28,10 +31,12 @@ class HomeController extends AbstractController
         return $this->render('moyentransport/ligne.html.twig');
     }
 
-    #[Route('/itineraires', name: 'voyager_itineraire')]
-    public function listItineraires(): Response
+    #[Route('/trajets', name: 'voyager_trajet', methods: ['GET'])]
+    public function listTrajet(TrajetRepository $trajetRepository): Response
     {
-        return $this->render('iteneraire/itineraire.html.twig');
+        return $this->render('trajet/trajetFront.html.twig', [
+            'trajets' => $trajetRepository->findAll(),
+        ]);
     }
 
     #[Route('/communes', name: 'voyager_commune')]
