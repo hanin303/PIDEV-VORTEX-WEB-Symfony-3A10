@@ -83,7 +83,7 @@ class HomeController extends AbstractController
     }
 
     #[Route('/communes', name: 'voyager_commune', methods: ['GET'])]
-    public function listTrajet(CommuneRepository $communeRepository): Response
+    public function listCommunes(CommuneRepository $communeRepository): Response
     {
         return $this->render('commune/communeFront.html.twig', [
             'communes' => $communeRepository->findAll(),
