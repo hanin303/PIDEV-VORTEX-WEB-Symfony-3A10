@@ -110,6 +110,16 @@ class HomeController extends AbstractController
             'controller_name' => 'HomeController',
         ]);
     }
+<<<<<<< HEAD
+  
+  
+    #[Route('/lignes', name: 'lignes_urbaine')]
+    public function listLignes(): Response
+    {
+        return $this->render('moyen_transport/ligne.html.twig');
+    }
+=======
+>>>>>>> 9d633ed548d44371540b5db01aa57a563122a997
 
 
      #[Route('/lignes', name: 'lignes_urbaine' , methods: ['GET'])]
