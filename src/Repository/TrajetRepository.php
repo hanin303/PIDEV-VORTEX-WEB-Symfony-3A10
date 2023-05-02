@@ -63,4 +63,30 @@ class TrajetRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+public function findTrajetsById($id)
+{
+    return $this->createQueryBuilder('t')
+        ->andWhere('t.id LIKE :id')
+        ->setParameter('id', '%' . $id . '%')
+        ->orderBy('t.id', 'ASC')
+        ->getQuery()
+        ->getResult();
+}
+/**
+ * Returns an array of trajets that match the given search term.
+ *
+ * @param string|null $searchTerm
+ * @return Trajet[]
+ */
+public function findBySearchTerm(?string $searchTerm): array
+{
+    $queryBuilder = $this->createQueryBuilder('t');
+
+    if ($searchTerm) {
+        $queryBuilder->andWhere('t.id LIKE :searchTerm')
+                     ->setParameter('searchTerm', '%'.$searchTerm.'%');
+    }
+
+    return $queryBuilder->getQuery()->getResult();
+}
 }

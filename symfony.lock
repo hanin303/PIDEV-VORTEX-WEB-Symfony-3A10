@@ -305,5 +305,8 @@
     },
     "twig/extra-bundle": {
         "version": "v3.5.1"
+    },
+    "yectep/phpspreadsheet-bundle": {
+        "version": "v1.0.0"
     }
 }

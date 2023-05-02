@@ -5,6 +5,7 @@
         <meta charset="utf-8" />
 		         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
         <link rel="shortcut icon" type="image/x-icon" href="{{ asset('Front/images/logo.png')}}">
+		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDVpdxQ5VonotjFU5u01A1hAwVsf4PElo0"></script>
         {% block stylesheets %}
 		         <link rel="stylesheet" href="{{ asset('Front/assets/css/main.css') }}" />
 	        	<noscript><link rel="stylesheet" href="{{ asset('Front/assets/css/noscript.css') }}" /></noscript>
@@ -37,6 +38,8 @@
 							<li class="active"><a href="{{ path('security_login') }}">SE CONNECTER</a></li>
 							<li ><a href="{{ path('security_registration') }}">Inscription</a></li>
 							<li><a href ="#" >Lignes Urbaines</a></li>
+							<li><a href ="{{path('voyager_trajet')}}">Trajets</a></li>
+							<li><a href ="#">Communes</a></li>
 							<li><a href ="#">Itinéraires</a></li>
 							<li><a href ="{{ path('voyager_commune') }}">Communes</a></li>
 							<li><a href ="{{ path('tarif_ticket') }}">Tarifs</a></li>
