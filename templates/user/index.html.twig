@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des utilisateurs {% endblock %}
+
+{% block body %}
+    <div class="row" style="text-align: center;align-items: center;justify-content: center;margin: 100px 1000px 30px;">
+    <h1>Utilisateurs</h1>
+
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+
+                <th class="w-0">Id</th>
+                <th class="w-0">Nom</th>
+                <th class="w-0">Prenom</th>
+                <th class="w-0">Username</th>
+                <th class="w-0">Email</th>
+                <th class="w-0">Mot de passe</th>
+                <th class="w-0">Numéro téléphone</th>
+                <th class="w-0">Carte identité</th>
+                <th class="w-25">Image</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.nom }}</td>
+                <td>{{ user.prenom }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.password }}</td>
+                <td>{{ user.numTel }}</td>
+                <td>{{ user.CIN }}</td>
+                <td>{{ user.image }}</td>
+                <td>
+                    <a class="btn btn-outline-info" href="{{ path('app_user_show', {'id': user.id}) }}">Afficher</a>
+                    <a class="btn btn-outline-success" href="{{ path('app_user_edit', {'id': user.id}) }}">Modifier</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="10">Pas d'utilisateurs</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+
+   
+    </table>
+    <a href="{{ path('app_user_new') }}"><button class="btn btn-outline-success">Ajouter</button</a>
+
+    </div>
+{% endblock %}

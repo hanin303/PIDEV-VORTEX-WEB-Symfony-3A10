@@ -15,15 +15,30 @@ class Ticket
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $status = null;
+    #[Assert\NotBlank(message: "prix is required")]
+    #[Assert\Regex(pattern: '/^\d+(\.\d{1,2})?$/', message: 'Invalid price format.')]
+    #[Assert\Positive(message: 'Price must be a positive number.')]
+    private ?string $prix = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(message:"prix is required")]
-    private ?string $prix = null;
+    #[Assert\NotBlank(message: "status is required")]
+    private ?string $status = null;
 
     #[ORM\OneToOne(inversedBy: 'id_ticket', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?Reservation $id_reservation = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank(message: "Type Ticket is required")]
+    #[Assert\Regex(
+        pattern: '/^[a-zA-Z ]{1,30}$/',
+        message: "Type Ticket should only contain letters and spaces, and its length should be between 1 and 30 characters"
+    )]
+    #[Assert\Type(
+        type: 'string',
+        message: 'description doit être une chaine de caractére.',
+    )]
+    private ?string $nom_ticket = null;
 
     public function getId(): ?int
     {
@@ -64,5 +79,22 @@ class Ticket
         $this->id_reservation = $id_reservation;
 
         return $this;
+    }
+
+    public function getNomTicket(): ?string
+    {
+        return $this->nom_ticket;
+    }
+
+    public function setNomTicket(?string $nom_ticket): self
+    {
+        $this->nom_ticket = $nom_ticket;
+
+        return $this;
+    }
+
+    public function getReservation(): ?Reservation
+    {
+        return $this->id_reservation;
     }
 }
