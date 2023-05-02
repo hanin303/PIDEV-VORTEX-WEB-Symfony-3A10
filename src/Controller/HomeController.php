@@ -32,6 +32,11 @@ use App\Repository\TrajetRepository;
 use App\Repository\CommuneRepository;
 use App\Form\CommuneType;
 use App\Entity\Commune;
+use App\Entity\User;
+use App\Repository\UserRepository;
+use App\services\imageUploader;
+use App\Form\ClientType;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 
 class HomeController extends AbstractController
@@ -48,7 +53,28 @@ class HomeController extends AbstractController
     {
         return $this->render('user/register.html.twig');
     }
+    #[Route('/{id}/change', name: 'app_edit3', methods: ['GET', 'POST'])]
+    public function edit(Request $request, User $user, UserRepository $userRepository,imageUploader $imageUploader): Response
+    {
+        $form = $this->createForm(ClientType::class, $user);
+        $form->handleRequest($request);
 
+        if ($form->isSubmitted() && $form->isValid()) {
+            $file=$form->get('images')->getData();
+            if($file){
+            $imageFileName = $imageUploader->upload($file);
+            $user->setImage($imageFileName);
+            }
+            $userRepository->save($user, true);
+
+            return $this->redirectToRoute('home', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->renderForm('Front/profile.html.twig', [
+            'user' => $user,
+            'form' => $form,
+        ]);
+    }
     #[Route('/reserver', name: 'reserver')]
     public function newReservation(Request $request, ReservationRepository $reservationRepository): Response
     {
@@ -73,6 +99,7 @@ class HomeController extends AbstractController
         ]);
     }
 
+   
     #[Route('/tarifs', name: 'tarif_ticket')]
     public function showListTickets(TicketRepository $ticketRepository): Response
     {

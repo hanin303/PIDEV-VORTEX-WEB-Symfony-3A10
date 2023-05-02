@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Entity\UserState;
 use App\Entity\Role;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\BrowserKit\Request;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -21,6 +22,8 @@ use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Validator\Validation;
+
 class UserType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -39,7 +42,15 @@ class UserType extends AbstractType
         ->add('username',TextType::class,[
             'constraints' => [
                 new NotBlank(['message' => 'username obligatoire']),
+                /*new UniqueEntity([
+                    'entityClass'=> User::class,
+                    'fields' => ['username'],
+                    'message' => 'username existe déjà.',
+                ])*/
+                
+
             ],
+            
         ])
         ->add('email',EmailType::class, [
             'constraints' => [
