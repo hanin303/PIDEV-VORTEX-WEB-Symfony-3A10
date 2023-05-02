@@ -322,12 +322,23 @@
         </a>
       </li><!-- End Charts Nav -->
 
-      <li class="nav-item">
-         <a class="nav-link"  href="#"> 
-          <i class="bi bi-exclamation-triangle-fill"></i><span>Gestion Reclamations</span><i class="bi bi-chevron-down ms-auto"></i>
+       <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-layout-text-window-reverse"></i><span>Reclamations</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
-       
-      </li><!-- End Icons Nav -->
+        <ul id="tables-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+          <li>
+            <a href="{{ path('app_reclamation_reponse') }}">
+              <i class="bi bi-circle"></i><span>Reclamations non repondus</span>
+            </a>
+          </li>
+          <li>
+            <a href="{{ path('app_reponse') }}">
+              <i class="bi bi-circle"></i><span>Reclamations repondus</span>
+            </a>
+          </li>
+        </ul>
+      </li>
 
       <li class="nav-item">
         <a class="nav-link"  href="{{ path('app_trajet_index') }}"> 

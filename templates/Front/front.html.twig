@@ -7,8 +7,15 @@
         <link rel="shortcut icon" type="image/x-icon" href="{{ asset('Front/images/logo.png')}}">
 		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDVpdxQ5VonotjFU5u01A1hAwVsf4PElo0"></script>
         {% block stylesheets %}
+
+		<link rel="stylesheet" href="{{ asset('Front/assets/css/main.css') }}" />
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-UO2eT0C1QSPvYcXaXdGsDhVgkMCw8IvP4EiqLVaCp42iisyDwrnIy1ExX4k4Qqf3" crossorigin="anonymous">
+
+		<noscript><link rel="stylesheet" href="{{ asset('Front/assets/css/noscript.css') }}" /></noscript>
+
 		         <link rel="stylesheet" href="{{ asset('Front/assets/css/main.css') }}" />
 	        	<noscript><link rel="stylesheet" href="{{ asset('Front/assets/css/noscript.css') }}" /></noscript>
+
         {% endblock %}
     
     </head>
@@ -35,7 +42,7 @@
 				<!-- Nav -->
 					<nav id="nav">
 						<ul class="links">
-							<li class="active"><a href="{{ path('security_login') }}">SE CONNECTER</a></li>
+							<li ><a href="{{ path('security_login') }}">SE CONNECTER</a></li>
 							<li ><a href="{{ path('security_registration') }}">Inscription</a></li>
 							<li><a href ="#" >Lignes Urbaines</a></li>
 							<li><a href ="{{path('voyager_trajet')}}">Trajets</a></li>
@@ -44,6 +51,7 @@
 							<li><a href ="{{ path('voyager_commune') }}">Communes</a></li>
 							<li><a href ="{{ path('tarif_ticket') }}">Tarifs</a></li>
 							<li><a href ="{{ path('reserver') }}">Réserver</a></li>
+							<li  class="active"><a href ="{{ path('add_reclamation') }}">Réclamer</a></li>
 							
 						</ul>
 						<ul class="icons">
