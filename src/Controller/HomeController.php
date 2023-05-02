@@ -95,7 +95,7 @@ class HomeController extends AbstractController
     #[Route('/lignes', name: 'lignes_urbaine')]
     public function listLignes(): Response
     {
-        return $this->render('moyentransport/ligne.html.twig');
+        return $this->render('moyen_transport/ligne.html.twig');
     }
 
     #[Route('/itineraires', name: 'voyager_itineraire')]
