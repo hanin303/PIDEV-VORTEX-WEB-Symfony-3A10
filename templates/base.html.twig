@@ -10,8 +10,7 @@
             <!-- Google Fonts -->
  <link href="https://fonts.gstatic.com" rel="preconnect">
 <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
-
- <link href="{{ asset('Back/Libraries/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+  <link href="{{ asset('Back/Libraries/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
   <link href="{{ asset('Back/Libraries/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
   <link href="{{ asset('Back/Libraries/boxicons/css/boxicons.min.css') }}" rel="stylesheet">
   <link href="{{ asset('Back/Libraries/quill/quill.snow.css') }}" rel="stylesheet">
@@ -20,7 +19,7 @@
   <link href="{{ asset('Back/Libraries/simple-datatables/style.css') }}" rel="stylesheet">
   <link href="{{ asset('Back/css/style.css') }}" rel="stylesheet">
         {% endblock %}
-
+ 
         {% block javascripts %}
             {#{ encore_entry_script_tags('app') }#}
   <script src="{{ asset('Back/Libraries/apexcharts/apexcharts.min.js') }}"></script>
@@ -34,6 +33,9 @@
    <script src="{{ asset('Back/js/main.js') }}"></script>
    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         {% endblock %}
+
+
+       
     </head>
     <body>
      {% block header %}
@@ -41,9 +43,9 @@
   <header id="header" class="header fixed-top d-flex align-items-center">
      
     <div class="d-flex align-items-center justify-content-between">
-      {# <a href="back.html.twig" class="logo d-flex align-items-center"> #}
-        <img src="{{ asset('Back/img/logo.png') }}" alt="">
-        <span class="d-none d-lg-block">NiceAdmin</span>
+       <a href="#" class="logo d-flex align-items-center"> 
+        <img src="{{ asset('Back/img/swift.png') }}" >
+        <span class="d-none d-lg-block">SwiftTransit</span>
       </a>
       <i class="bi bi-list toggle-sidebar-btn"></i>
      
@@ -209,14 +211,14 @@
         <li class="nav-item dropdown pe-3">
 
           <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-           <img src="{{ asset('Back/img/profile-img.jpg') }}" alt="Profile" class="rounded-circle">
-            <span class="d-none d-md-block dropdown-toggle ps-2">K. Anderson</span>
+           <img src="{{ asset('Back/img/hanin.jpg') }}" alt="Profile" class="rounded-circle">
+            <span class="d-none d-md-block dropdown-toggle ps-2">Hanin Ben Jemaà</span>
           </a><!-- End Profile Iamge Icon -->
 
           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
             <li class="dropdown-header">
-              <h6>Kevin Anderson</h6>
-              <span>Web Designer</span>
+              <h6>Hanin</h6>
+              <span>Client</span>
             </li>
             <li>
               <hr class="dropdown-divider">
@@ -251,13 +253,12 @@
             <li>
               <hr class="dropdown-divider">
             </li>
-
-            <li>
-              <a class="dropdown-item d-flex align-items-center" href="#">
-                <i class="bi bi-box-arrow-right"></i>
-                <span>Sign Out</span>
-              </a>
-            </li>
+<li>
+  <a class="dropdown-item d-flex align-items-center" href="{{ path('security_login') }}">
+    <i class="bi bi-box-arrow-right"></i>
+    <span>Sign Out</span>
+  </a>
+</li>
 
           </ul><!-- End Profile Dropdown Items -->
         </li><!-- End Profile Nav -->
@@ -276,16 +277,11 @@
     <ul class="sidebar-nav" id="sidebar-nav">
 
       <li class="nav-item">
-        <a class="nav-link " href="back.html.twig">
-          <i class="bi bi-grid"></i>
-          <span>Dashboard</span>
+         <a class="nav-link" href="{{ path('app_dashboard') }}">
+          <i class="bi bi-grid"></i><span>Dashboard</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
       </li><!-- End Dashboard Nav -->
 
-      <li class="nav-item">
-        {# <a class="nav-link " href="{{ path('app_station_index') }}">  #}
-          <i class="bi bi-menu-button-wide"></i><span>Station</span><i class="bi bi-chevron-down ms-auto"></i>
-        </a>
         
       </li><!-- End Components Nav -->
 
@@ -295,29 +291,46 @@
         </a>
         
       </li><!-- End Forms Nav -->
-
       <li class="nav-item">
-        {# <a class="nav-link"  href="{{ path('app_ticket_index') }}"> #}
-          <i class="bi bi-layout-text-window-reverse"></i><span>Ticket</span><i class="bi bi-chevron-down ms-auto"></i>
+          <a class="nav-link"  href="{{ path('app_reservation_index') }}">
+          <i class="bi bi-calendar-plus"></i><span>Gestion Reservations</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+      <li class="nav-item">
+          <a class="nav-link"  href="{{ path('app_ticket_index') }}">
+          <i class="bi bi-ticket"></i><span>Gestion Tickets</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+
+         <li class="nav-item">
+       <a class="nav-link " href="#">  
+          <i class="bi bi-building"></i><span>Gestion Stations</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
     
       </li><!-- End Tables Nav -->
 
       <li class="nav-item">
-        {# <a class="nav-link" href="{{ path('app_commune_index') }}"> #}
+         <a class="nav-link" href="{{ path('app_commune_index') }}"> 
           <i class="bi bi-bar-chart"></i><span>Commune</span><i class="bi bi-chevron-down ms-auto"></i>
+
+        <a class="nav-link" href="#"> 
+          <i class="bi bi-geo-alt"></i><span>Gestion Communes</span><i class="bi bi-chevron-down ms-auto"></i>
+
+        </a>
+      </li><!-- End Charts Nav -->
+       <li class="nav-item">
+         <a class="nav-link" href="{{ path('app_station_index') }}"> 
+          <i class="bi bi-bar-chart"></i><span>Station</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
       </li><!-- End Charts Nav -->
 
       <li class="nav-item">
-        {# <a class="nav-link"  href="{{ path('app_reclamation_index') }}"> #}
-          <i class="bi bi-gem"></i><span>Reclamation</span><i class="bi bi-chevron-down ms-auto"></i>
+         <a class="nav-link"  href="#"> 
+          <i class="bi bi-exclamation-triangle-fill"></i><span>Gestion Reclamations</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
        
       </li><!-- End Icons Nav -->
 
       <li class="nav-item">
-        g<a class="nav-link"  href="{{ path('app_trajet_index') }}"> 
+        <a class="nav-link"  href="{{ path('app_trajet_index') }}"> 
           <i class="bi bi-gem"></i><span>Trajet</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
        
@@ -333,12 +346,17 @@
       <li class="nav-heading">Pages</li>
 
       <li class="nav-item">
-        {# <a class="nav-link" href="{{ path('app_user_index') }}"> #}
+         <a class="nav-link" href="{{ path('app_user_index') }}"> 
           <i class="bi bi-person"></i>
-          <span>Profile</span>
+          <span>Gestion utilisateurs</span>
         </a>
       </li><!-- End Profile Page Nav -->
-
+      <li class="nav-item">
+         <a class="nav-link" href="{{ path('app_role_index') }}"> 
+          <i class="bi  bi-people"></i>
+          <span>Gestion roles</span>
+        </a>
+      </li><!-- End Profile Page Nav -->
       <li class="nav-item">
         <a class="nav-link collapsed" href="pages-faq.html">
           <i class="bi bi-question-circle"></i>
@@ -367,19 +385,7 @@
         </a>
       </li><!-- End Login Page Nav -->
 
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="pages-error-404.html">
-          <i class="bi bi-dash-circle"></i>
-          <span>Error 404</span>
-        </a>
-      </li><!-- End Error 404 Page Nav -->
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="pages-blank.html">
-          <i class="bi bi-file-earmark"></i>
-          <span>Blank</span>
-        </a>
-      </li><!-- End Blank Page Nav -->
+      
 
     </ul>
 
