@@ -4,10 +4,11 @@
 {% endblock %}
 
 {% block body %}
-
 	<center>
 		<div style="margin-top:70px ; margin-right:1000px">
-			<h1 style="margin-left:90px; font-weight: bold; font-family: 'Times New Roman', Times, serif;">Liste des Tickets
+			<h1 style="margin-left:90px; font-weight: bold; font-family: 'Times New Roman', Times, serif;">
+				<i class="bi bi-basket2"></i>
+				Liste des Tickets
 			</h1>
 			<br>
 			<a href="{{ path('app_ticket_new') }}">
@@ -33,9 +34,9 @@
 		{% endfor %}
 	</div>
 	<div style="display:inline-block;align-items: center; margin-left:350px;margin-right:60px">
-		<form class="form-inline">
+		<form  action="{{path('searchTicket')}}" class="form-inline" id="search-form">
 			<div class="input-group">
-				<input class="form-control mr-sm-2" id="date" name="date" type="search" placeholder="Search.." onkeyup="myFunction()" aria-label="Search" style="width: 400px;">
+				<input class="form-control mr-sm-2" id="searchValue" name="searchValue" type="text" placeholder="Search.." aria-label="Search" style="width: 400px;">
 				<div class="input-group-append">
 					<span class="input-group-text">
 						<i class="bi bi-search"></i>
@@ -44,8 +45,8 @@
 			</div>
 		</form>
 	</div>
-	<div style="display: flex ;align-items: center;justify-content: center;margin-top:25px; margin-left:350px;margin-right:20px ; background-color: white">
-		<table class="table table-bordered border-primary" id="myTable">
+	<div style="display: flex ;align-items: center;justify-content: center;margin-top:25px; margin-left:350px;margin-right:20px ; background-color: white!important">
+		<table class="table table-bordered border-primary" id="t">
 			<thead>
 				<tr>
 					<th>Id</th>
@@ -55,7 +56,7 @@
 					<th>Actions</th>
 				</tr>
 			</thead>
-			<tbody>
+			<tbody id="all">
 				{% for ticket in tickets %}
 					<tr>
 						<td>{{ ticket.id }}</td>
@@ -78,50 +79,102 @@
 								<button type="button" class="btn btn-success">
 									<i class="bi bi-pencil me-2"></i>Modifier</button>
 							</a>
+							<a href="{{ path('payement', {'id': ticket.id})}}">
+								<button type="button" class="btn btn-secondary">
+									<i class="bi bi-credit-card me-2"></i>Paiement</button>
+							</a>
+							<!-- Button trigger modal -->
+						{#	<button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#paymentModal">
+								<i class="bi bi-credit-card me-2"></i>Paiement
+							</button>
+
+							<!-- Modal -->
+							<div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h5 class="modal-title" id="paymentModalLabel">
+												<i class="bi bi-credit-card me-2"></i>Paiement Ticket</h5>
+											<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+										</div>
+										<div
+											class="modal-body">
+											<!-- Payment form goes here -->
+											<form>
+												<div class="form-group">
+													<label for="cardNumber">Numéro de carte</label>
+													<input type="text" class="form-control" id="cardNumber" placeholder="Entrez le numéro de carte">
+												</div>
+												<div class="form-group">
+													<label for="expiryDate">Date d'expiration</label>
+													<input type="text" class="form-control" id="expiryDate" placeholder="MM/YY">
+												</div>
+												<div class="form-group">
+													<label for="cvv">CVV</label>
+													<input type="text" class="form-control" id="cvv" placeholder="Entez CVV">
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+													<button type="button" class="btn btn-primary">Confirm paiement</button>
+												</div>
+											</form>
+										</div>
+									</div>
+
+								</div>
+							</div>
+							#}
 						</td>
 					</tr>
-				{% else %}
-					<tr>
-						<td colspan="4">no records found</td>
-					</tr>
-				{% endfor %}
+				</div>
 			</tbody>
-		</table>
-	</div>
+		</td>
+	</tr>
+{% else %}
+	<tr>
+		<td colspan="4">no records found</td>
+	</tr>
+{% endfor %}
+</tbody>
+<tbody id="searchtab"></tbody>
+</table>
+</div>
+<main id="main" class="main" >
+ {{ knp_pagination_render(tickets) }}
+</main>
 
-	<script>
-		function myFunction() {
-var input,
-filter1,
-filter2,
-table,
-tr,
-td1,
-td2,
-i,
-txtValue1,
-txtValue2;
-input = document.getElementById("date");
-filter1 = input.value.toUpperCase();
-filter2 = input.value.toUpperCase(); // Second filter value
+<script>src = "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js" ></script>
+<script>
+$(document).ready(function () {
+    $("#search").keyup(function (e) {
+        var value = $(this).val();
 
-table = document.getElementById("myTable");
-tr = table.getElementsByTagName("tr");
-for (i = 0; i < tr.length; i++) {
-td1 = tr[i].getElementsByTagName("td")[1]; // First column to search
-td2 = tr[i].getElementsByTagName("td")[2]; // Second column to search
-if (td1 || td2) {
-txtValue1 = td1.textContent || td1.innerText;
-txtValue2 = td2.textContent || td2.innerText;
-if (txtValue1.toUpperCase().indexOf(filter1) > -1 || txtValue2.toUpperCase().indexOf(filter2) > -1) {
-tr[i].style.display = "";
-} else {
-tr[i].style.display = "none";
-}
-}
-}
-}
-	</script>
+        $.ajax({
+            url: "{{ path('searchTicket') }}",
+            type: "GET",
+            data: {
+                searchValue: value
+            },
+            success: function (retour) {
+                if (retour) {
+                    $("#t tbody#all").hide();
+                    $("#t tbody#searchtab").empty();
 
+                    $.each(JSON.parse(retour), function (i, obj) {
+                        $("#t tbody#searchtab").append("<tr><td>" + obj.id + "</td><td>" + obj.nomTicket + "</td><td>" + obj.prix + '</td><td><a href="{{ path("app_ticket_show", {"id": ' + obj.id + '}) }}">Show</a><a href="{{ path("app_ticket_edit", {"id": ' + obj.id + '}) }}">Edit</a></td></tr>');
+                    });
+                } else {
+                    $("#t tbody#all").show();
+                    $("#t tbody#searchtab").empty();
+                }
 
+                $("#t tbody#searchtab").fadeIn("fast");
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+            }
+        });
+    });
+});
+</script>
 {% endblock %}

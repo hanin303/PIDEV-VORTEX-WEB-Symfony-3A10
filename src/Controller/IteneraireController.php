@@ -14,10 +14,14 @@ use Symfony\Component\Routing\Annotation\Route;
 class IteneraireController extends AbstractController
 {
     #[Route('/', name: 'app_iteneraire_index', methods: ['GET'])]
-    public function index(IteneraireRepository $iteneraireRepository): Response
+    public function index(Request $request ,IteneraireRepository $iteneraireRepository): Response
     {
+        $searchTerm = $request->query->get('q');
+        $iteneraires = $this->getDoctrine()->getRepository(Iteneraire::class)->findBySearchTerm($searchTerm);
         return $this->render('iteneraire/index.html.twig', [
-            'iteneraires' => $iteneraireRepository->findAll(),
+            'iteneraires' => $iteneraires,
+            'searchTerm' => $searchTerm,
+            
         ]);
     }
 

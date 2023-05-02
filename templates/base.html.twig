@@ -31,6 +31,7 @@
   <script src="{{ asset('Back/Libraries/tinymce/tinymce.min.js') }}"></script>
   <script src="{{ asset('Back/Libraries/php-email-form/validate.js') }}"></script>
    <script src="{{ asset('Back/js/main.js') }}"></script>
+   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         {% endblock %}
 
 
@@ -276,9 +277,8 @@
     <ul class="sidebar-nav" id="sidebar-nav">
 
       <li class="nav-item">
-        <a class="nav-link " href="back.html.twig">
-          <i class="bi bi-grid"></i>
-          <span>Dashboard</span>
+         <a class="nav-link" href="{{ path('app_dashboard') }}">
+          <i class="bi bi-grid"></i><span>Dashboard</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
       </li><!-- End Dashboard Nav -->
 
@@ -341,7 +341,7 @@
       </li>
 
       <li class="nav-item">
-        g<a class="nav-link"  href="{{ path('app_trajet_index') }}"> 
+        <a class="nav-link"  href="{{ path('app_trajet_index') }}"> 
           <i class="bi bi-gem"></i><span>Trajet</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
        

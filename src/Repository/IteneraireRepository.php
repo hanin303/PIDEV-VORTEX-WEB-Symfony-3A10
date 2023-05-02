@@ -63,4 +63,22 @@ class IteneraireRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
+/**
+ * Returns an array of trajets that match the given search term.
+ *
+ * @param string|null $searchTerm
+ * @return Trajet[]
+ */
+public function findBySearchTerm(?string $searchTerm): array
+{
+    $queryBuilder = $this->createQueryBuilder('t');
+
+    if ($searchTerm) {
+        $queryBuilder->andWhere('t.id LIKE :searchTerm')
+                     ->setParameter('searchTerm', '%'.$searchTerm.'%');
+    }
+
+    return $queryBuilder->getQuery()->getResult();
+}
 }
