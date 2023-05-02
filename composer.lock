@@ -4,10 +4,11 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
+    "content-hash": "117bf47012d3a3496b05d037444822f1",
+
     "content-hash": "a381cdf41a9e1091bd572dc41e1c5ed1",
 
     "content-hash": "0e32165396d08a3c4e72179f2cb18adc",
-
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -1526,9 +1527,75 @@
 
         },
         {
-<<<<<<< HEAD
+
+            "name": "jolicode/jolinotif",
+            "version": "v2.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jolicode/JoliNotif.git",
+                "reference": "a10a7cb3bf6dbf8833d1d1f1f0554506cb1d9eaa"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jolicode/JoliNotif/zipball/a10a7cb3bf6dbf8833d1d1f1f0554506cb1d9eaa",
+                "reference": "a10a7cb3bf6dbf8833d1d1f1f0554506cb1d9eaa",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.0",
+                "symfony/process": "^5.4 || ^6.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.13",
+                "symfony/finder": "^5.4 || ^6.0",
+                "symfony/phpunit-bridge": "^5.4 || ^6.0"
+            },
+            "bin": [
+                "jolinotif"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Joli\\JoliNotif\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Loïck Piera",
+                    "email": "pyrech@gmail.com"
+                }
+            ],
+            "description": "Send desktop notifications on Windows, Linux, MacOS.",
+            "keywords": [
+                "MAC",
+                "growl",
+                "linux",
+                "notification",
+                "windows"
+            ],
+            "support": {
+                "issues": "https://github.com/jolicode/JoliNotif/issues",
+                "source": "https://github.com/jolicode/JoliNotif/tree/v2.5.0"
+            },
+            "funding": [
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/jolicode/jolinotif",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2022-12-24T13:38:12+00:00"
+        },
+        {
+            "name": "monolog/monolog",
+            "version": "2.9.1",
+
             "name": "imagine/imagine",
             "version": "1.3.4",
+
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-imagine/Imagine.git",
@@ -1536,7 +1603,7 @@
             },
             "dist": {
                 "type": "zip",
-=======
+
             "name": "ezyang/htmlpurifier",
             "version": "v4.16.0",
             "source": {
@@ -1607,7 +1674,6 @@
             },
             "dist": {
                 "type": "zip",
->>>>>>> 14fb3ffd15a65aa092dba9c03797c40f4476f933
                 "url": "https://api.github.com/repos/php-imagine/Imagine/zipball/c9ba67d2f1dc0785187261a656cb55ff01f594be",
                 "reference": "c9ba67d2f1dc0785187261a656cb55ff01f594be",
                 "shasum": ""
@@ -1659,11 +1725,9 @@
                 "source": "https://github.com/php-imagine/Imagine/tree/1.3.4"
             },
             "time": "2023-04-17T15:21:07+00:00"
-<<<<<<< HEAD
-=======
+
             },
-            "time": "2023-04-17T15:21:07+00:00"
-        },
+       
         {
             "name": "knplabs/knp-components",
             "version": "v3.6.0",
@@ -1822,7 +1886,7 @@
                 "source": "https://github.com/KnpLabs/KnpPaginatorBundle/tree/v5.9.0"
             },
             "time": "2022-08-28T14:42:14+00:00"
->>>>>>> 14fb3ffd15a65aa092dba9c03797c40f4476f933
+
         },
         {
             "name": "liip/imagine-bundle",
@@ -2603,7 +2667,7 @@
             "time": "2023-03-27T19:02:04+00:00"
         },
         {
-<<<<<<< HEAD
+
             "name": "phpstan/phpdoc-parser",
             "version": "1.20.4",
             "source": {
@@ -2613,7 +2677,7 @@
             },
             "dist": {
                 "type": "zip",
-=======
+
             "name": "phpoffice/phpspreadsheet",
             "version": "1.28.0",
             "source": {
@@ -2738,7 +2802,7 @@
             },
             "dist": {
                 "type": "zip",
->>>>>>> 14fb3ffd15a65aa092dba9c03797c40f4476f933
+
                 "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/7d568c87a9df9c5f7e8b5f075fc469aa8cb0a4cd",
                 "reference": "7d568c87a9df9c5f7e8b5f075fc469aa8cb0a4cd",
                 "shasum": ""
@@ -5166,7 +5230,7 @@
             "time": "2023-03-31T08:25:44+00:00"
         },
         {
-<<<<<<< HEAD
+
             "name": "symfony/http-client",
             "version": "v5.4.23",
             "source": {
@@ -5176,7 +5240,7 @@
             },
             "dist": {
                 "type": "zip",
-=======
+
             "name": "symfony/google-mailer",
             "version": "v5.4.23",
             "source": {
@@ -5251,8 +5315,7 @@
                 "reference": "617c98e46b54e43ca76945a908b1749bb82f4478"
             },
             "dist": {
-                "type": "zip",
->>>>>>> 14fb3ffd15a65aa092dba9c03797c40f4476f933
+                
                 "url": "https://api.github.com/repos/symfony/http-client/zipball/617c98e46b54e43ca76945a908b1749bb82f4478",
                 "reference": "617c98e46b54e43ca76945a908b1749bb82f4478",
                 "shasum": ""
@@ -9056,6 +9119,79 @@
             "time": "2023-02-14T08:03:56+00:00"
         },
         {
+            "name": "symfony/webpack-encore-bundle",
+            "version": "v1.16.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/webpack-encore-bundle.git",
+                "reference": "1862d71e483769b40278548a30e756ce13ef9d4c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/webpack-encore-bundle/zipball/1862d71e483769b40278548a30e756ce13ef9d4c",
+                "reference": "1862d71e483769b40278548a30e756ce13ef9d4c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.3",
+                "symfony/asset": "^4.4 || ^5.0 || ^6.0",
+                "symfony/config": "^4.4 || ^5.0 || ^6.0",
+                "symfony/dependency-injection": "^4.4 || ^5.0 || ^6.0",
+                "symfony/deprecation-contracts": "^2.1 || ^3.0",
+                "symfony/http-kernel": "^4.4 || ^5.0 || ^6.0",
+                "symfony/polyfill-php80": "^1.25.0",
+                "symfony/service-contracts": "^1.0 || ^2.0 || ^3.0"
+            },
+            "require-dev": {
+                "symfony/framework-bundle": "^4.4 || ^5.0 || ^6.0",
+                "symfony/phpunit-bridge": "^5.3 || ^6.0",
+                "symfony/twig-bundle": "^4.4 || ^5.0 || ^6.0",
+                "symfony/web-link": "^4.4 || ^5.0 || ^6.0"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "thanks": {
+                    "name": "symfony/webpack-encore",
+                    "url": "https://github.com/symfony/webpack-encore"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\WebpackEncoreBundle\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Integration with your Symfony app & Webpack Encore!",
+            "support": {
+                "issues": "https://github.com/symfony/webpack-encore-bundle/issues",
+                "source": "https://github.com/symfony/webpack-encore-bundle/tree/v1.16.1"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2023-01-18T19:37:55+00:00"
+        },
+        {
             "name": "symfony/yaml",
             "version": "v5.4.23",
             "source": {
@@ -9129,6 +9265,78 @@
                 }
             ],
             "time": "2023-04-23T19:33:36+00:00"
+        },
+        {
+            "name": "tecnickcom/tcpdf",
+            "version": "6.6.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tecnickcom/TCPDF.git",
+                "reference": "e3cffc9bcbc76e89e167e9eb0bbda0cab7518459"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tecnickcom/TCPDF/zipball/e3cffc9bcbc76e89e167e9eb0bbda0cab7518459",
+                "reference": "e3cffc9bcbc76e89e167e9eb0bbda0cab7518459",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "config",
+                    "include",
+                    "tcpdf.php",
+                    "tcpdf_parser.php",
+                    "tcpdf_import.php",
+                    "tcpdf_barcodes_1d.php",
+                    "tcpdf_barcodes_2d.php",
+                    "include/tcpdf_colors.php",
+                    "include/tcpdf_filters.php",
+                    "include/tcpdf_font_data.php",
+                    "include/tcpdf_fonts.php",
+                    "include/tcpdf_images.php",
+                    "include/tcpdf_static.php",
+                    "include/barcodes/datamatrix.php",
+                    "include/barcodes/pdf417.php",
+                    "include/barcodes/qrcode.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0-only"
+            ],
+            "authors": [
+                {
+                    "name": "Nicola Asuni",
+                    "email": "info@tecnick.com",
+                    "role": "lead"
+                }
+            ],
+            "description": "TCPDF is a PHP class for generating PDF documents and barcodes.",
+            "homepage": "http://www.tcpdf.org/",
+            "keywords": [
+                "PDFD32000-2008",
+                "TCPDF",
+                "barcodes",
+                "datamatrix",
+                "pdf",
+                "pdf417",
+                "qrcode"
+            ],
+            "support": {
+                "issues": "https://github.com/tecnickcom/TCPDF/issues",
+                "source": "https://github.com/tecnickcom/TCPDF/tree/6.6.2"
+            },
+            "funding": [
+                {
+                    "url": "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&currency_code=GBP&business=paypal@tecnick.com&item_name=donation%20for%20tcpdf%20project",
+                    "type": "custom"
+                }
+            ],
+            "time": "2022-12-17T10:28:59+00:00"
         },
         {
             "name": "twig/extra-bundle",
