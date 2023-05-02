@@ -3,6 +3,7 @@
 {% block title %}New Trajet{% endblock %}
 
 {% block body %}
+{{ form_start(form,{'attr': {'novalidate': 'novalidate'}} ) }}
     <h1>Create new Trajet</h1>
 
     {{ include('trajet/_form.html.twig') }}

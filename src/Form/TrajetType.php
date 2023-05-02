@@ -18,7 +18,11 @@ class TrajetType extends AbstractType
             ->add('pts_arrive')
             ->add('id_it',EntityType::class,
             ['class'=>Iteneraire::class,
-            'choice_label'=>'id'])
+            'choice_label'=> function($iteneraire) {
+                return $iteneraire->getPtsDepart() . ' - ' . $iteneraire->getPtsArrive();
+            }])
+
+            
         ;
     }
 

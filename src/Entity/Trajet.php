@@ -4,7 +4,7 @@ namespace App\Entity;
 
 use App\Repository\TrajetRepository;
 use Doctrine\ORM\Mapping as ORM;
-
+use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: TrajetRepository::class)]
 class Trajet
 {
@@ -13,13 +13,22 @@ class Trajet
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(type: "integer", options: ["unsigned" => true])]
+    #[Assert\NotBlank(message:"Temps parcours est obligatoire")]
+    #[Assert\Length(max:2,maxMessage:"Temps parcours ne doit pas depasser 2 chiffres")]
     private ?string $temps_parcours = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message:"Point de depart est obligatoire")]
+    #[Assert\Length(max:10,maxMessage:"Point de depart ne doit pas depasser 10 characters")]
+    #[Assert\Regex(pattern: '/^[a-zA-Z]*$/', message: 'Point de depart ne doit pas contenir des chiffres')]
+    
     private ?string $pts_depart = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message:"Point d'arrive est obligatoire")]
+    #[Assert\Regex(pattern: '/^[a-zA-Z]*$/', message: 'Point darrive ne doit pas contenir des chiffres')]
+    #[Assert\Length(max:10,maxMessage:"Point d'arrive' ne doit pas depasser 10 characters")]
     private ?string $pts_arrive = null;
 
     #[ORM\ManyToOne(inversedBy: 'id_trajet')]
