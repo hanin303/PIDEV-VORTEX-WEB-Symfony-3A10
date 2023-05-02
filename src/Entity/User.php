@@ -29,8 +29,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(name: "googleAuthenticatorSecret", length: 255, nullable: true)]
-    private $googleAuthenticatorSecret;
+   // #[ORM\Column(name: "googleAuthenticatorSecret", length: 255, nullable: true)]
+    //private $googleAuthenticatorSecret;
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
