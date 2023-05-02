@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Knp\Component\Pager\PaginatorInterface;
 use Joli\JoliNotif\Notification;
 use Joli\JoliNotif\NotifierFactory;
 
@@ -17,10 +18,19 @@ use Joli\JoliNotif\NotifierFactory;
 class LigneController extends AbstractController
 {
     #[Route('/', name: 'app_ligne_index', methods: ['GET'])]
-    public function index(LigneRepository $ligneRepository): Response
+    public function index(LigneRepository $ligneRepository, PaginatorInterface $paginator ,  Request $request): Response
     {
+
+        $ligs= $ligneRepository->findAll();
+        $m = $paginator->paginate(
+            $ligs, /* query NOT result */
+            $request->query->getInt('page', 1),
+            4
+        );
+
         return $this->render('ligne/index.html.twig', [
-            'lignes' => $ligneRepository->findAll(),
+            'lignes' =>$m,
+            
         ]);
     }
 

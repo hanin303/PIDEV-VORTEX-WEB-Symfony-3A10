@@ -34,19 +34,6 @@ class MoyenTransportController extends AbstractController
             $request->query->getInt('page', 1),
             4
         );
-       /*  $currentSort = $request->query->get('sort', 'ASC');
-    $nextSort = $currentSort == 'ASC' ? 'DESC' : 'ASC';
-    $moys = $moyenTransportRepository->findBy([], ['marque' => $currentSort]); */
-        // tri
-       /*  $currentSort = $request->query->get('sort', 'ASC');
-    
-    if ($currentSort == 'ASC') {
-        $moys = $moyenTransportRepository->findBy([], ['marque' => 'ASC']);
-        $nextSort = 'DESC';
-    } else {
-        $moys = $moyenTransportRepository->findBy([], ['marque' => 'DESC']);
-        $nextSort = 'ASC';
-    } */
     $currentSort = $request->query->get('sort', 'ASC');
     if ($currentSort == 'ASC') {
         $moys = $moyenTransportRepository->findBy([], ['marque' => 'ASC']);
