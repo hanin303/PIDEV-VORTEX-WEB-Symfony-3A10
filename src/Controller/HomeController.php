@@ -16,7 +16,6 @@ use App\Repository\ReservationRepository;
 use Symfony\Component\HttpFoundation\Request;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -161,15 +160,10 @@ class HomeController extends AbstractController
 
       
   
-    #[Route('/itineraires', name: 'voyager_itineraire')]
+   /*  #[Route('/itineraires', name: 'voyager_itineraire')]
     public function listItineraires(): Response
+ */
 
-
-    #[Route('/lignes', name: 'lignes_urbaine')]
-    public function listLignes(): Response
-    {
-        return $this->render('moyentransport/ligne.html.twig');
-    }
 
     #[Route('/trajets', name: 'voyager_trajet', methods: ['GET'])]
     public function listTrajet(TrajetRepository $trajetRepository): Response
