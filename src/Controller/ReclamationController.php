@@ -168,16 +168,20 @@ public function index(Request $request, PaginatorInterface $paginator,Authentica
 
 
 #[Route('/reclamation/update/{id}', name: 'update_reclamation')]
-    public function update(Request $req, $id) {
+    public function update(Request $req, $id,UserRepository $userRepository,AuthenticationUtils $authenticationUtils) {
       
       $reclamation = $this->getDoctrine()->getRepository(Reclamation::class)->find($id); 
       $form = $this->createForm(ReclamationType::class,$reclamation);
       $form->handleRequest($req);
+      $user=new User();
     if($form->isSubmitted() && $form->isValid()) {
        
-    $id=1;
-    $utilisateur = $this->entityManager->getRepository(User::class)->find($id);
-    $reclamation->setIdUser($utilisateur);
+   // $id=1;
+       
+    $lastUsername = $authenticationUtils->getLastUsername();
+    $user= $userRepository->findOneBy(['username'=>$lastUsername]);
+    //$utilisateur = $this->entityManager->getRepository(User::class)->find($id);
+    $reclamation->setIdUser($user);
     $this->entityManager->persist($reclamation);
     $this->entityManager->flush();
 
