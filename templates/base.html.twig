@@ -213,7 +213,7 @@
         <li class="nav-item dropdown pe-3">
 
           <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-           <!--<img src="{{ asset(app.user.getImage()) }}" alt="Profile" class="rounded-circle">-->
+           
             <span class="d-none d-md-block dropdown-toggle ps-2">{{app.user.username}}</span>
           </a><!-- End Profile Iamge Icon -->
 
@@ -309,28 +309,15 @@
           <a class="nav-link"  href="{{ path('app_ticket_index') }}">
           <i class="bi bi-ticket"></i><span>Gestion Tickets</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
-
-         <li class="nav-item">
-       <a class="nav-link " href="#">  
-          <i class="bi bi-building"></i><span>Gestion Stations</span><i class="bi bi-chevron-down ms-auto"></i>
-        </a>
-    
-      </li><!-- End Tables Nav -->
-
       <li class="nav-item">
-        <a class="nav-link" href="#"> 
          <a class="nav-link" href="{{ path('app_commune_index') }}"> 
 
-          <i class="bi bi-bar-chart"></i><span>Commune</span><i class="bi bi-chevron-down ms-auto"></i>
-
-        <a class="nav-link" href="#"> 
           <i class="bi bi-geo-alt"></i><span>Gestion Communes</span><i class="bi bi-chevron-down ms-auto"></i>
-
-        </a>
+          </a>
       </li><!-- End Charts Nav -->
        <li class="nav-item">
          <a class="nav-link" href="{{ path('app_station_index') }}"> 
-          <i class="bi bi-bar-chart"></i><span>Station</span><i class="bi bi-chevron-down ms-auto"></i>
+          <i class="bi bi-building"></i><span>Gestion Stations</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
       </li><!-- End Charts Nav -->
 

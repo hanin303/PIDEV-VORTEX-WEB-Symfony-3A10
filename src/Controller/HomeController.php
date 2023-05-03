@@ -18,6 +18,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\StationRepository;
+use App\Form\StationType;
+use App\Entity\Station;
 
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Doctrine\Persistence\ManagerRegistry;
@@ -37,7 +40,10 @@ use App\Repository\UserRepository;
 use App\services\imageUploader;
 use App\Form\ClientType;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-
+use Symfony\Component\Mime\Address;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 
 class HomeController extends AbstractController
 {
@@ -76,22 +82,52 @@ class HomeController extends AbstractController
         ]);
     }
     #[Route('/reserver', name: 'reserver')]
-    public function newReservation(Request $request, ReservationRepository $reservationRepository): Response
+    public function newReservation(Request $request, ReservationRepository $reservationRepository,MailerInterface $mailer,AuthenticationUtils $authenticationUtils,UserRepository $userRepository): Response
     {
         $reservation = new Reservation();
+        //$reservation->setDateReservation(new \DateTime('now'));
         $form = $this->createForm(ReservationType::class, $reservation);
         $form->handleRequest($request);
+        
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $reservation->setHeureDepart($form->get('heure_depart')->getData());
-            $reservation->setHeureArrive($form->get('heure_arrive')->getData());
+            $user= new User();
+            $error=$authenticationUtils->getLastAuthenticationError();
+            $lastUsername=$authenticationUtils->getLastUsername();
+            $user=$userRepository->findOneBy(['username'=>$lastUsername]);
+            //$reservation->setHeureDepart($form->get('heure_depart')->getData());
+            //$reservation->setHeureArrive($form->get('heure_arrive')->getData());
             $entityManager = $this->getDoctrine()->getManager();
             $reservation->setStatus("En attente");
             $entityManager->persist($reservation);
             $entityManager->flush();
+            // Send email notification
+            /*$email = (new Email())
+            ->from('swift.transit2023@gmail.com')
+            ->to('swift.transit2023@gmail.com')
+            ->subject('New reservation added')
+            ->html('<p>A new reservation has been added.</p>');
+            $mailer->send($email);*/
+            //$user = $this->getDoctrine()->getRepository(User::class)->find(1);
+            $email = (new TemplatedEmail())
+                ->from(Address::create('Swift Transit <SwiftTransitPlatform@hotmail.com>'))
+                ->to($user->getEmail())
+                ->subject('Reservation Information')
+                ->text('Sending emails is fun again!')
+                ->htmlTemplate('mailing/reservation.html.twig')
+                ->context([
+                    'reservation' => $reservation,
+                    'user' => $user->getPrenom().' '.$user->getNom(),
+                    'moyen' => $reservation->getIdMoy()->getTypeVehicule(), // add the moyen attribute
+                    'heureDepart' => $reservation->getHeureDepart(), // add the heureDepart attribute
+                    'heureArrivee' => $reservation->getHeureArrive(), // add the heureArrivee attribute
+                    'typeTicket' => $reservation->getTypeTicket(), // add the status attribute
+                    'itineraire' => $reservation->getIdIt()->getPtsDepart() . ' -> ' . $reservation->getIdIt()->getPtsArrive(), // add the itineraire attribute
+                ]);
+            $mailer->send($email);
+
             $this->addFlash('success', 'reservation ajouter avec succès!');
-            $reservation = new Reservation(); // create a new instance
-            $form = $this->createForm(ReservationType::class, $reservation);
+            //return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
         }
         return $this->renderForm('reservation/reserver.html.twig', [
             'reservation' => $reservation,
@@ -200,13 +236,23 @@ class HomeController extends AbstractController
         ]);
     }
 
-    #[Route('/communes', name: 'voyager_commune', methods: ['GET'])]
-    public function listCommunes(CommuneRepository $communeRepository): Response
+    #[Route('/stations', name: 'voyager_station', methods: ['GET'])]
+    public function listTrajets(StationRepository $stationRepository): Response
+
     {
-        return $this->render('commune/communeFront.html.twig', [
-            'communes' => $communeRepository->findAll(),
-        ]);
+        $stations = $stationRepository->findAll();
+    $stationLongAlts = [];
+    foreach ($stations as $station) {
+        if ($station->getLongAlt()) {
+            $stationLongAlts[] = $station->getLongAlt();
+        }
     }
+    return $this->render('station/stationFront.html.twig', [
+        'stationLongAlts' => $stationLongAlts
+    ]);
+    }
+
+    
     #[Route('/reclamation', name: 'reclamation')]
     public function listReclamations(): Response
     {
