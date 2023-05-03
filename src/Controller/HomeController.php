@@ -204,7 +204,7 @@ class HomeController extends AbstractController
     }
 
     #[Route('/stations', name: 'voyager_station', methods: ['GET'])]
-    public function listTrajet(StationRepository $stationRepository): Response
+    public function listTrajets(StationRepository $stationRepository): Response
 
     {
         $stations = $stationRepository->findAll();
