@@ -15,6 +15,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Notifier\NotifierInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use App\Repository\UserRepository;
+
 
 
 class ReclamationController extends AbstractController
@@ -51,7 +54,7 @@ class ReclamationController extends AbstractController
     //     ]);
     // }
 
-    #[Route('/reclamations', name: 'app_reclamation')]
+   /* #[Route('/reclamations', name: 'app_reclamation')]
 public function index(Request $request, PaginatorInterface $paginator): Response
 {
     $entityManager = $this->getDoctrine()->getManager();
@@ -76,13 +79,39 @@ public function index(Request $request, PaginatorInterface $paginator): Response
         'itemsPerPage' => $itemsPerPage,
         'availableItemsPerPage' => $availableItemsPerPage,
     ]);
+}*/
+#[Route('/reclamations', name: 'app_reclamation')]
+public function index(Request $request, PaginatorInterface $paginator): Response
+{
+    $entityManager = $this->getDoctrine()->getManager();
+    $repository = $entityManager->getRepository(Reclamation::class);
+    $query = $repository->createQueryBuilder('c')
+        ->orderBy('c.id_reclamation', 'DESC');
+    
+    // Get the value of the items per page from the request
+    $itemsPerPage = $request->query->getInt('itemsPerPage', 5);
+
+    $data = $paginator->paginate( 
+        $query,
+        $request->query->getInt('page', 1), 
+        $itemsPerPage
+    );
+
+    // Create an array of available items per page options
+    $availableItemsPerPage = [5, 10, 25, 50, 100];
+
+    return $this->render('reclamation/index.html.twig', [
+        'list' => $data,
+        'itemsPerPage' => $itemsPerPage,
+        'availableItemsPerPage' => $availableItemsPerPage,
+    ]);
 }
 
 
     
 
     #[Route('/reclamation/add', name: 'add_reclamation')]
-    public function addreclamation(ManagerRegistry $doctrine,Request $req, NotifierInterface $notifier): Response {
+    public function addreclamation(ManagerRegistry $doctrine,Request $req, NotifierInterface $notifier,UserRepository $userRepository,AuthenticationUtils $authenticationUtils): Response {
 
         $badWords = ['merde','fuck','shit','con','connart','putain','pute','chier','bitch','bèullshit','bollocks','damn','putin'];
       
@@ -91,6 +120,7 @@ public function index(Request $request, PaginatorInterface $paginator): Response
         $form = $this->createForm(ReclamationType::class,$reclamation);
         // cree une nouvelle formulaire pour recuperer les recs
         $form->handleRequest($req);
+        $user = new User();
         
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -102,9 +132,11 @@ public function index(Request $request, PaginatorInterface $paginator): Response
                 }
             }
            
-        $id=1;
-        $utilisateur = $this->entityManager->getRepository(User::class)->find($id);
-        $reclamation->setIdUser($utilisateur);
+        $lastUsername = $authenticationUtils->getLastUsername();
+        $user= $userRepository->findOneBy(['username'=>$lastUsername]);
+       // $id=1;
+        //$utilisateur = $this->entityManager->getRepository(User::class)->find($id);
+        $reclamation->setIdUser($user);
         $this->entityManager->persist($reclamation);
         // affecter le user au rec
         $this->entityManager->flush();

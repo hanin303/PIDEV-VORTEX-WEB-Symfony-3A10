@@ -81,6 +81,7 @@ class ReservationController extends AbstractController
             $mailer->send($email);*/
             //$user = $this->getDoctrine()->getRepository(User::class)->find(1);
             $email = (new TemplatedEmail())
+
                 ->from(Address::create('Swift Transit <swiftTransitNew@hotmail.com>'))
                 ->to($user->getEmail())
                 ->subject('Reservation Information')
