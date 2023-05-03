@@ -81,12 +81,27 @@ public function index(Request $request, PaginatorInterface $paginator): Response
     ]);
 }*/
 #[Route('/reclamations', name: 'app_reclamation')]
-public function index(Request $request, PaginatorInterface $paginator): Response
+public function index(Request $request, PaginatorInterface $paginator,AuthenticationUtils $authenticationUtils,UserRepository $userRepository): Response
 {
-    $entityManager = $this->getDoctrine()->getManager();
-    $repository = $entityManager->getRepository(Reclamation::class);
-    $query = $repository->createQueryBuilder('c')
-        ->orderBy('c.id_reclamation', 'DESC');
+    $user= new User();
+   
+        $error=$authenticationUtils->getLastAuthenticationError();
+        $lastUsername=$authenticationUtils->getLastUsername();
+        $user=$userRepository->findOneBy(['username'=>$lastUsername]);
+        $userId=$user->getId();
+        //$userId = $_SESSION[$user->getId()];
+        $entityManager = $this->getDoctrine()->getManager();
+        $repository = $entityManager->getRepository(Reclamation::class);
+        $query = $repository->createQueryBuilder('c')
+            ->leftJoin('c.idUser', 'u')
+            ->addSelect('u')
+            ->where('u.id = :userId')
+            ->setParameter('userId', $userId)
+            ->orderBy('c.id_reclamation', 'DESC');
+    //$entityManager = $this->getDoctrine()->getManager();
+    //$repository = $entityManager->getRepository(Reclamation::class);
+    //$query = $repository->createQueryBuilder('c')
+        //->orderBy('c.id_reclamation', 'DESC');
     
     // Get the value of the items per page from the request
     $itemsPerPage = $request->query->getInt('itemsPerPage', 5);
