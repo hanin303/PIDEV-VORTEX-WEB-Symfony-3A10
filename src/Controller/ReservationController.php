@@ -20,6 +20,7 @@ use Symfony\Component\Mime\Email;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use Symfony\Component\Mime\Address;
 
 #[Route('/reservation')]
 class ReservationController extends AbstractController
@@ -73,8 +74,8 @@ class ReservationController extends AbstractController
             $mailer->send($email);*/
             $user = $this->getDoctrine()->getRepository(User::class)->find(1);
             $email = (new TemplatedEmail())
-                ->from('from@example.com')
-                ->to('<hanin.benjemaa@esprit.tn>')
+                ->from(Address::create('Swift Transit <swiftTransitNew@hotmail.com>'))
+                ->to('<abir.machraoui@hotmail.com>')
                 ->subject('Reservation Information')
                 ->text('Sending emails is fun again!')
                 ->htmlTemplate('mailing/reservation.html.twig')
