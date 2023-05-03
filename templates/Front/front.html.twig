@@ -43,12 +43,7 @@
 					<nav id="nav">
 					{% if app.user.id_role.id == 2 %}
 						<ul class="links">
-							<li class="active"><a href="{{ path('security_login') }}">SE CONNECTER</a></li>
-							<li ><a href="{{ path('security_registration') }}">Inscription</a></li>
-							<li><a href ="#" >pas</a></li>
-							<li><a href ="#">Itinéraires</a></li>
 							<li><a href ="{{ path('voyager_station') }}">Station</a></li>
-
 							<li><a href ="{{ path('lignes_urbaine') }}" >Lignes Urbaines</a></li>
 							<li><a href ="{{path('voyager_trajet')}}">Trajets</a></li>
 							 {% if not app.user %}
@@ -57,7 +52,6 @@
 							 <li><a href ="{{ path('app_edit3',{'id': app.user.id}) }}">Profile</a></li
                              {% endif %}
 							<li><a href ="{{ path('tarif_ticket') }}">Tarifs</a></li>
-							<li><a href ="{{ path('reserver') }}">Réserver</a></li>
 							<li><a href="{{ path('app_password_change') }}">Password</a></li>
 							<li  class="active"><a href ="{{ path('add_reclamation') }}">Réclamer</a></li>
 
@@ -65,15 +59,16 @@
 						</ul>
 				    {% elseif app.user.id_role.id == 3 %}
 					<ul class="links">
-							<li><a href ="#">Itinéraires</a></li>
+							<li><a href ="{{ path('voyager_station') }}">Station</a></li>
+							<li><a href ="{{path('voyager_trajet')}}">Trajets</a></li>
+							<li><a href ="{{ path('lignes_urbaine') }}" >Lignes Urbaines</a></li>
 							 {% if not app.user %}
                              {% else %}
                              <a class="dropdown-item d-flex align-items-center" href="{{ path('app_edit2',{'id': app.user.id}) }}">
 							 <li><a href ="{{ path('app_edit3',{'id': app.user.id}) }}">Profile</a></li>
                              {% endif %}
-							<li><a href ="{{ path('voyager_commune') }}">Communes</a></li>
-							<li><a href ="{{ path('reserver') }}">Réserver</a></li>
 							<li><a href="{{ path('app_password_change') }}">Password</a></li>
+							<li  class="active"><a href ="{{ path('add_reclamation') }}">Réclamer</a></li>
 							
 						</ul>
 					{% else %}
@@ -86,6 +81,7 @@
 							<li><a href ="{{ path('tarif_ticket') }}">Tarifs</a></li>
 							<li><a href ="{{ path('reserver') }}">Réserver</a></li>
 							<li><a href="{{ path('app_password_change') }}">Password</a></li>
+							<li  class="active"><a href ="{{ path('add_reclamation') }}">Réclamer</a></li>
 
 						</ul>
 					{% endif %}
@@ -93,7 +89,7 @@
 
 						<a class="btn btn-outline-info" href="{{ path('app_logout') }}">Déconnexion</a>
 						<ul class="icons">
-							<li><a href="#" class="icon brands fab fa-opencart"><span class="label">Twitter</span></a></li>
+							{#<li><a href="#" class="icon brands fab fa-opencart"><span class="label">Twitter</span></a></li>#}
 							{#<li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>#}
 							{#<li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>#}
 						</ul>
