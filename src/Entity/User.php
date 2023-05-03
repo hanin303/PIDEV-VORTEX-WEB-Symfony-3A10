@@ -52,9 +52,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\JoinColumn(nullable: false)]
     private ?Role $id_role = null;
 
-    #[ORM\OneToMany(mappedBy: 'id_user', targetEntity: Annonces::class)]
-    private Collection $id_annonce;
-
     #[ORM\OneToMany(mappedBy: 'id_client', targetEntity: Reservation::class)]
     private Collection $id_reservation;
 
@@ -64,11 +61,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     private ?string $token ;
 
-    public function __construct()
-    {
-        $this->id_annonce = new ArrayCollection();
-        $this->id_reservation = new ArrayCollection();
-    }
+   
 
     public function getId(): ?int
     {
@@ -202,35 +195,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     }
 
-    /**
-     * @return Collection<int, Annonces>
-     */
-    public function getIdAnnonce(): Collection
-    {
-        return $this->id_annonce;
-    }
+    
 
-    public function addIdAnnonce(Annonces $idAnnonce): self
-    {
-        if (!$this->id_annonce->contains($idAnnonce)) {
-            $this->id_annonce->add($idAnnonce);
-            $idAnnonce->setIdUser($this);
-        }
+   
 
-        return $this;
-    }
-
-    public function removeIdAnnonce(Annonces $idAnnonce): self
-    {
-        if ($this->id_annonce->removeElement($idAnnonce)) {
-            // set the owning side to null (unless already changed)
-            if ($idAnnonce->getIdUser() === $this) {
-                $idAnnonce->setIdUser(null);
-            }
-        }
-
-        return $this;
-    }
+  
 
     /**
      * @return Collection<int, Reservation>

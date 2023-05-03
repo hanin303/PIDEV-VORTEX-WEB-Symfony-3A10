@@ -10,9 +10,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Repository\CommuneRepository;
-use App\Form\CommuneType;
-use App\Entity\Commune;
+use App\Repository\StationRepository;
+use App\Form\StationType;
+use App\Entity\Station;
 
 class HomeController extends AbstractController
 {
@@ -77,13 +77,22 @@ class HomeController extends AbstractController
         return $this->render('iteneraire/itineraire.html.twig');
     }
 
-    #[Route('/communes', name: 'voyager_commune', methods: ['GET'])]
-    public function listTrajet(CommuneRepository $communeRepository): Response
+    #[Route('/stations', name: 'voyager_station', methods: ['GET'])]
+    public function listTrajet(StationRepository $stationRepository): Response
     {
-        return $this->render('commune/communeFront.html.twig', [
-            'communes' => $communeRepository->findAll(),
-        ]);
+        $stations = $stationRepository->findAll();
+    $stationLongAlts = [];
+    foreach ($stations as $station) {
+        if ($station->getLongAlt()) {
+            $stationLongAlts[] = $station->getLongAlt();
+        }
     }
+    return $this->render('station/stationFront.html.twig', [
+        'stationLongAlts' => $stationLongAlts
+    ]);
+    }
+
+    
     #[Route('/reclamation', name: 'reclamation')]
     public function listReclamations(): Response
     {
