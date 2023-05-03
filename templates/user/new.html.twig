@@ -3,10 +3,10 @@
 {% block title %}create user{% endblock %}
 
 {% block body %}
-    <div style="text-align: center;">
+    <div class="row" style="text-align: center;align-items: center;justify-content: center;margin: 100px 500px 100px;">
     <h1>nouveau utilisateur</h1>
     {{ form_start(form,{'attr': {'novalidate': 'novalidate'}} ) }}
     {{ include('user/_form.html.twig') }}
-    
-    <a class="btn btn-outline-info href="{{ path('app_user_index') }}">Retour</a>
+       
+        <a class="btn btn-outline-info" href="{{ path('app_user_index') }}">Retour</a>
 {% endblock %}

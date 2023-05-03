@@ -4,20 +4,33 @@ namespace App\Controller;
 
 use App\Entity\Ligne;
 use App\Form\LigneType;
+use App\Entity\MoyenTransport;
 use App\Repository\LigneRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Knp\Component\Pager\PaginatorInterface;
+use Joli\JoliNotif\Notification;
+use Joli\JoliNotif\NotifierFactory;
 
 #[Route('/ligne')]
 class LigneController extends AbstractController
 {
     #[Route('/', name: 'app_ligne_index', methods: ['GET'])]
-    public function index(LigneRepository $ligneRepository): Response
+    public function index(LigneRepository $ligneRepository, PaginatorInterface $paginator ,  Request $request): Response
     {
+
+        $ligs= $ligneRepository->findAll();
+        $m = $paginator->paginate(
+            $ligs, /* query NOT result */
+            $request->query->getInt('page', 1),
+            4
+        );
+
         return $this->render('ligne/index.html.twig', [
-            'lignes' => $ligneRepository->findAll(),
+            'lignes' =>$m,
+            
         ]);
     }
 
@@ -29,6 +42,17 @@ class LigneController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $notifier = NotifierFactory::create();
+
+            // Create your notification
+             $notification =
+                         (new Notification())
+                         ->setTitle('Swift Transit')
+                         ->setBody('Vous avez ajoutez une ligne')
+                         ->setIcon(__DIR__.'/logo.png')
+                         
+      ;
+      $notifier->send($notification);
             $ligneRepository->save($ligne, true);
 
             return $this->redirectToRoute('app_ligne_index', [], Response::HTTP_SEE_OTHER);

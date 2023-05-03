@@ -36,24 +36,65 @@
 
 				<!-- Header -->
 					<header id="header">
-						<a href="{{ path('home') }}" class="logo">Swift Transit </a>
+					<a href="{{ path('home') }}" class="logo">Swift Transit </a>
 					</header>
 
 				<!-- Nav -->
 					<nav id="nav">
+					{% if app.user.id_role.id == 2 %}
 						<ul class="links">
-							<li ><a href="{{ path('security_login') }}">SE CONNECTER</a></li>
-							<li ><a href="{{ path('security_registration') }}">Inscription</a></li>
-							<li><a href ="#" >Lignes Urbaines</a></li>
+<<<<<<< HEAD
+=======
+
+
+							<li><a href ="{{ path('lignes_urbaine') }}" >Lignes Urbaines</a></li>
 							<li><a href ="{{path('voyager_trajet')}}">Trajets</a></li>
 							<li><a href ="#">Communes</a></li>
+>>>>>>> 9d633ed548d44371540b5db01aa57a563122a997
 							<li><a href ="#">Itinéraires</a></li>
+							 {% if not app.user %}
+                             {% else %}
+                             <a class="dropdown-item d-flex align-items-center" href="{{ path('app_edit2',{'id': app.user.id}) }}">
+							 <li><a href ="{{ path('app_edit3',{'id': app.user.id}) }}">Mon profile</a></li
+                             {% endif %}
+							 <li><a href ="{{ path('lignes_urbaine') }}">Lignes Urbaines</a></li>
 							<li><a href ="{{ path('voyager_commune') }}">Communes</a></li>
 							<li><a href ="{{ path('tarif_ticket') }}">Tarifs</a></li>
 							<li><a href ="{{ path('reserver') }}">Réserver</a></li>
+							<li><a href="{{ path('app_password_change') }}">Password</a></li>
 							<li  class="active"><a href ="{{ path('add_reclamation') }}">Réclamer</a></li>
+
 							
 						</ul>
+				    {% elseif app.user.id_role.id == 3 %}
+					<ul class="links">
+							<li><a href ="#">Itinéraires</a></li>
+							 {% if not app.user %}
+                             {% else %}
+                             <a class="dropdown-item d-flex align-items-center" href="{{ path('app_edit2',{'id': app.user.id}) }}">
+							 <li><a href ="{{ path('app_edit3',{'id': app.user.id}) }}">Mon profile</a></li>
+                             {% endif %}
+							<li><a href ="{{ path('voyager_commune') }}">Communes</a></li>
+							<li><a href ="{{ path('reserver') }}">Réserver</a></li>
+							<li><a href="{{ path('app_password_change') }}">Password</a></li>
+							
+						</ul>
+					{% else %}
+					<ul class="links">
+							 {% if not app.user %}
+                             {% else %}
+                             <a class="dropdown-item d-flex align-items-center" href="{{ path('app_edit2',{'id': app.user.id}) }}">
+							 <li><a href ="{{ path('app_edit3',{'id': app.user.id}) }}">Mon profile</a></li
+                             {% endif %}
+							<li><a href ="{{ path('tarif_ticket') }}">Tarifs</a></li>
+							<li><a href ="{{ path('reserver') }}">Réserver</a></li>
+							<li><a href="{{ path('app_password_change') }}">Password</a></li>
+
+						</ul>
+					{% endif %}
+					
+
+						<a class="btn btn-outline-info" href="{{ path('app_logout') }}">Déconnexion</a>
 						<ul class="icons">
 							<li><a href="#" class="icon brands fab fa-opencart"><span class="label">Twitter</span></a></li>
 							{#<li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>#}
