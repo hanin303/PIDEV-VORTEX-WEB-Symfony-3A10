@@ -20,10 +20,14 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\Validator\Constraints\Unique;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 #[Route('/user')]
 class UserController extends AbstractController
-{
+{    
+
+    
     #[Route('/', name: 'app_user_index', methods: ['GET'])]
     public function index(UserRepository $userRepository): Response
     {
@@ -33,7 +37,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/new', name: 'app_user_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, UserRepository $userRepository,imageUploader $imageUploader): Response
+    public function new(Request $request, UserRepository $userRepository,imageUploader $imageUploader,UserPasswordEncoderInterface $userPasswordEncoder): Response
     {
         $user = new User();
         $user->setImage('null');
@@ -42,7 +46,10 @@ class UserController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $mdp = $form->get('password')->getData();
-            $user->setPassword(base64_encode($mdp));
+            $user->setPassword( $userPasswordEncoder->encodePassword(
+                $user,
+                $mdp
+            ));
             /*$file=$form->get('images')->getData();
             if($file){
             $imageFileName = $imageUploader->upload($file);
@@ -64,10 +71,11 @@ class UserController extends AbstractController
         return $this->renderForm('user/new.html.twig', [
             'user' => $user,
             'form' => $form,
+        
         ]);
     }
     #[Route('/register', name: 'app_user_register', methods: ['GET', 'POST'])]
-    public function register(Request $request, UserRepository $userRepository,RoleRepository $roleRepository,UserStateRepository $userStateRepository,imageUploader $imageUploader,): Response
+    public function register(Request $request, UserRepository $userRepository,RoleRepository $roleRepository,UserStateRepository $userStateRepository,imageUploader $imageUploader): Response
     {
         $user = new User();
         $user->setIdRole($roleRepository->find(4));
@@ -76,6 +84,7 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            
             $file=$form->get('images')->getData();
             if($file){
             $imageFileName = $imageUploader->upload($file);
@@ -100,8 +109,9 @@ class UserController extends AbstractController
         ]);
     }
 
+
     #[Route('/{id}/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, User $user, UserRepository $userRepository,imageUploader $imageUploader): Response
+    public function edit(Request $request, User $user, UserRepository $userRepository): Response
     {
         $form = $this->createForm(AdminEditType::class, $user);
         $form->handleRequest($request);
@@ -135,7 +145,7 @@ class UserController extends AbstractController
             'form' => $form,
         ]);
     }
-    #[Route('/{id}', name: 'app_user_delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'app_user_delete', methods: ['POST','GET'])]
     public function delete(Request $request, User $user, UserRepository $userRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {

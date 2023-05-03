@@ -8,22 +8,35 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity as ConstraintsUniqueEntity;
+use Symfony\Component\Validator\Constraints\Unique;
+use Symfony\Component\Validator\Validation;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UnqueEntity;
+use Symfony\Component\Validator\Constraints\UniqueEntity;
+
+
+
 
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[UniqueEntity('email',"Adresse e-mail existe déjà")]
-#[UniqueEntity('username',"Username existe déjà")]
-#[UniqueEntity('CIN',"Carte identité existe dèjà")]
 
 
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+
+
+/**
+ * Summary of User
+ */
+class User implements UserInterface, PasswordAuthenticatedUserInterface  
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
+   // #[ORM\Column(name: "googleAuthenticatorSecret", length: 255, nullable: true)]
+    //private $googleAuthenticatorSecret;
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
@@ -50,14 +63,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\ManyToOne(inversedBy: 'id_user')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Role $id_role = null;
+    public ?Role $id_role = null;
+    private $role = [];
 
     #[ORM\OneToMany(mappedBy: 'id_client', targetEntity: Reservation::class)]
     private Collection $id_reservation;
 
     #[ORM\ManyToOne(inversedBy: 'id_user')]
     #[ORM\JoinColumn(nullable: true)]
-    private ?UserState $id_state = null;
+    public ?UserState $id_state = null;
 
     private ?string $token ;
 
@@ -172,6 +186,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIdRole(?Role $id_role): self
     {
         $this->id_role = $id_role;
+        $this->role =[];
+        $this->role[]=$id_role->getNom();
+        array_unique($this->role);
 
         return $this;
     }
@@ -255,16 +272,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see UserInterface
      */
-    public function getRoles(): void
+    public function getRoles()
     {
-        $roles = $this->id_role;
+        $this->role[]=$this->id_role->getNom();
+        return array_unique($this->role);
         // guarantee every user at least has ROLE_USER
     }
 
     public function setRoles(Role $roles): self
     {
-        $this->id_role = $roles;
 
+        $this->role[]=$roles->getNom();
+        array_unique($this->role);
         return $this;
     }
 
@@ -288,4 +307,5 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }
+   
 }

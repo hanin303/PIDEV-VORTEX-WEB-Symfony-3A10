@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Repository\MoyenTransportRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use App\Entity\Ligne;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: MoyenTransportRepository::class)]
@@ -16,21 +18,33 @@ class MoyenTransport
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message:"Matricule is required")]
+    #[Assert\Positive(message:"Matricule is numeric")]
+    #[Assert\Length(max:8,maxMessage:"Matricule depasse 8 caractères.")]
     private ?int $matricule = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message:"numero is required")]
+    #[Assert\Positive(message:"numero is numeric")]
+    #[Assert\Length(max:2,maxMessage:"numero depasse 2 caractères.")]
     private ?int $num = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message:"capacité is required")]
+    #[Assert\Positive(message:"capacité is numeric")]
+    #[Assert\Length(max:2,maxMessage:"capacité depasse 2 caractères.")]
     private ?int $capacite = null;
 
+    #[Assert\NotBlank(message:"type vehicule is required")]
     #[ORM\Column(length: 255)]
     private ?string $type_vehicule = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message:"marque is required")]
     private ?string $marque = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message:"etat is required")]
     private ?string $etat = null;
 
     #[ORM\ManyToOne(inversedBy: 'id_moy')]
@@ -43,6 +57,9 @@ class MoyenTransport
 
     #[ORM\OneToMany(mappedBy: 'id_moy', targetEntity: Reservation::class)]
     private Collection $id_reservation;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $note = null;
 
     public function __construct()
     {
@@ -180,6 +197,18 @@ class MoyenTransport
                 $idReservation->setIdMoy(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getNote(): ?float
+    {
+        return $this->note;
+    }
+
+    public function setNote(?float $note): self
+    {
+        $this->note = $note;
 
         return $this;
     }
