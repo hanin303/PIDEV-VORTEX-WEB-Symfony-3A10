@@ -9,6 +9,7 @@ use App\Entity\Ticket;
 use App\Entity\MoyenTransport;
 use App\Form\ReservationType;
 use App\Repository\ReservationRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,6 +22,7 @@ use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use Symfony\Component\Mime\Address;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 #[Route('/reservation')]
 class ReservationController extends AbstractController
@@ -49,7 +51,7 @@ class ReservationController extends AbstractController
     }*/
 
     #[Route('/new', name: 'app_reservation_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, ReservationRepository $reservationRepository, MailerInterface $mailer): Response
+    public function new(Request $request, ReservationRepository $reservationRepository, MailerInterface $mailer,AuthenticationUtils $authenticationUtils,UserRepository $userRepository): Response
     //public function new(Request $request, ReservationRepository $reservationRepository, MailerInterface $mailer): Response
 
     {
@@ -57,8 +59,13 @@ class ReservationController extends AbstractController
         //$reservation->setDateReservation(new \DateTime('now'));
         $form = $this->createForm(ReservationType::class, $reservation);
         $form->handleRequest($request);
+        
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $user= new User();
+            $error=$authenticationUtils->getLastAuthenticationError();
+            $lastUsername=$authenticationUtils->getLastUsername();
+            $user=$userRepository->findOneBy(['username'=>$lastUsername]);
             //$reservation->setHeureDepart($form->get('heure_depart')->getData());
             //$reservation->setHeureArrive($form->get('heure_arrive')->getData());
             $entityManager = $this->getDoctrine()->getManager();
@@ -72,16 +79,16 @@ class ReservationController extends AbstractController
             ->subject('New reservation added')
             ->html('<p>A new reservation has been added.</p>');
             $mailer->send($email);*/
-            $user = $this->getDoctrine()->getRepository(User::class)->find(1);
+            //$user = $this->getDoctrine()->getRepository(User::class)->find(1);
             $email = (new TemplatedEmail())
                 ->from(Address::create('Swift Transit <swiftTransitNew@hotmail.com>'))
-                ->to('<abir.machraoui@hotmail.com>')
+                ->to($user->getEmail())
                 ->subject('Reservation Information')
                 ->text('Sending emails is fun again!')
                 ->htmlTemplate('mailing/reservation.html.twig')
                 ->context([
                     'reservation' => $reservation,
-                    'user' => $user->getNom(),
+                    'user' => $user->getPrenom().' '.$user->getNom(),
                     'moyen' => $reservation->getIdMoy()->getTypeVehicule(), // add the moyen attribute
                     'heureDepart' => $reservation->getHeureDepart(), // add the heureDepart attribute
                     'heureArrivee' => $reservation->getHeureArrive(), // add the heureArrivee attribute
