@@ -8,6 +8,9 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
+use App\Form\CommuneType;
+use App\Entity\Commune;
+
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class StationType extends AbstractType
@@ -16,12 +19,11 @@ class StationType extends AbstractType
     {
         $builder
             ->add('long_alt')
-            ->add('id_moy', EntityType::class, [
-                'class' => MoyenTransport::class,
+            ->add('commune', EntityType::class, [
+                'class' => Commune::class,
                 'choice_label' => 'id',
-                'multiple' => true, // set to false if you want a single select dropdown
-                'expanded' => false, 
             ])
+      
     
         ;
     }
