@@ -98,12 +98,7 @@ public function index(Request $request, PaginatorInterface $paginator,Authentica
             ->where('u.id = :userId')
             ->setParameter('userId', $userId)
             ->orderBy('c.id_reclamation', 'DESC');
-    //$entityManager = $this->getDoctrine()->getManager();
-    //$repository = $entityManager->getRepository(Reclamation::class);
-    //$query = $repository->createQueryBuilder('c')
-        //->orderBy('c.id_reclamation', 'DESC');
-    
-    // Get the value of the items per page from the request
+   
     $itemsPerPage = $request->query->getInt('itemsPerPage', 5);
 
     $data = $paginator->paginate( 
