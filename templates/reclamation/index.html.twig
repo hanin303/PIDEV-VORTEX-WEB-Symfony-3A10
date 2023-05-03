@@ -1,10 +1,14 @@
 {% extends 'Front/front.html.twig' %}
 
 {% block title %}Mes Reclamations{% endblock %}
+{% block css %}
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		{% endblock %} 
 
 {% block body %}
     <footer id="footer">
         <section>
+        <a href="{{ path('add_reclamation') }}" class="fa fa-arrow-circle-right" style="font-size:24px;color:grey">Ajouter Reclamation</a>
             <form action="{{ path('app_reclamation') }}" method="get">
             <label for="itemsPerPage">Items per page:</label>
             <select name="itemsPerPage" id="itemsPerPage" onchange="this.form.submit()">
@@ -12,7 +16,7 @@
                     <option value="{{ option }}" {% if option == itemsPerPage %}selected{% endif %}>{{ option }}</option>
                 {% endfor %}
             </select>
-        </form>
+            </form>
             <table>
                 <tr>
                     <th>Objet</th>
