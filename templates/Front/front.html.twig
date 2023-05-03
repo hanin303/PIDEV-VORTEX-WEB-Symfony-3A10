@@ -5,7 +5,7 @@
         <meta charset="utf-8" />
 		         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
         <link rel="shortcut icon" type="image/x-icon" href="{{ asset('Front/images/logo.png')}}">
-		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDVpdxQ5VonotjFU5u01A1hAwVsf4PElo0"></script>
+		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDVpdxQ5VonotjFU5u01A1hAwVsf4PElo0&libraries=places"></script>
         {% block stylesheets %}
 		         <link rel="stylesheet" href="{{ asset('Front/assets/css/main.css') }}" />
 	        	<noscript><link rel="stylesheet" href="{{ asset('Front/assets/css/noscript.css') }}" /></noscript>
@@ -62,6 +62,41 @@
 							</article>
 
 					</div>
+					<script>
+					// Create the search box and link it to the UI element.
+const searchBox = new google.maps.places.SearchBox(document.getElementById('search-box'));
+
+// Add the search box to the map.
+map.controls[google.maps.ControlPosition.TOP_LEFT].push(document.getElementById('search-box'));
+// Listen for the event fired when the user submits a search.
+searchBox.addListener('places_changed', function() {
+  // Get the places returned by the search.
+  const places = searchBox.getPlaces();
+
+  // If no places were found, do nothing.
+  if (places.length === 0) {
+    return;
+  }
+
+  // For each place, add a marker to the map and center the map on the marker.
+  places.forEach(function(place) {
+    if (!place.geometry || !place.geometry.location) {
+      console.log("Returned place contains no geometry");
+      return;
+    }
+
+    // Create a marker for the place.
+    const marker = new google.maps.Marker({
+      map: map,
+      position: place.geometry.location
+    });
+
+    // Center the map on the marker.
+    map.setCenter(place.geometry.location);
+  });
+});
+
+					</script>
 					   {% endblock %}
 
 				<!-- Footer -->
