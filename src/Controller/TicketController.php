@@ -104,9 +104,9 @@ class TicketController extends AbstractController
                 $entityManager->flush();
             }
             // If the charge is successful, send an SMS notification to the customer using Twilio API
-            $twilioAccountSid = 'AC46a24a2b271b750bc6a7af2072b22c2d';
-            $twilioAuthToken = '219bc0c8f72233fb6fcab3fddf63e34c';
-            $twilioFromNumber = '+16205539102';
+            $twilioAccountSid = 'AC0226bf08116597b73913509f6254045c';
+            $twilioAuthToken = '024a9030dfe3c91dacd155fc3d2ccdd3';
+            $twilioFromNumber = '+13203736038';
             $twilioToNumber = '+21654891319';
             // Instantiate a new HTTP client
             $httpClient = HttpClient::create();
