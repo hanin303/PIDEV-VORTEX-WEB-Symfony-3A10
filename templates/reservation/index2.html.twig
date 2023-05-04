@@ -1,49 +1,13 @@
-{% extends 'base.html.twig' %}
-
-{% block title %}Reservation index
-{% endblock %}
+{% extends 'Front/front.html.twig' %}
 
 {% block body %}
-
-	<center>
+   <div id="main">
 		<div style="margin-top:70px ; margin-right:1100px">
-			<h1 style="margin-left:310px; font-weight: bold; font-family: 'Times New Roman', Times, serif;">
+			<h3>
 				<i class="bi bi-list-ul"></i>
 				Liste des Reservations
-			</h1>
-			<br>
-			<span class="d-inline-block" style="margin-left:200px;">
-				<a href="{{ path('app_reservation_new') }}">
-					<button type="button" class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Ajouter reservation">
-						<i class="bi bi-plus-lg"></i>
-						Réserver
-					</button>
-				</a>
-			</span>
-			<span class="d-inline-block" style="margin-right:70px;">
-				<a href="{{ path('app_reservation_stats') }}">
-					<button type="button" class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="View statistics">
-						<i class="bi bi-bar-chart-line"></i>
-					</button>
-				</a>
-			</span>
-			<span class="d-inline-block" style="margin-right:-140px;">
-				<a href="{{ path('ticket_pdf') }}" target="_blank" class="btn btn-info">
-					<i class="bi bi-file-earmark-pdf"></i>
-					Générez vos billets PDF
-				</a>
-			</span>
-
-			<script>
-				var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-return new bootstrap.Tooltip(tooltipTriggerEl)
-})
-			</script>
-
-		</div>
-	</center>
-	<div class="d-flex justify-content-center ">
+			</h3>
+<div class="d-flex justify-content-center ">
 		{% for type, messages in app.flashes %}
 			{% for message in messages %}
 				<div class="alert alert-{{ type }} alert-dismissible fade show d-flex align-items-center">
@@ -57,8 +21,17 @@ return new bootstrap.Tooltip(tooltipTriggerEl)
 			{% endfor %}
 		{% endfor %}
 	</div>
+			<script>
+				var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+return new bootstrap.Tooltip(tooltipTriggerEl)
+})
+			</script>
+
+		</div>
+	</center>
 	<br>
-	<div style="display:inline-block;align-items: center; margin-left:350px;margin-right:60px">
+	<div >
 		<form class="form-inline">
 			<div class="input-group">
 				<input class="form-control mr-sm-2" id="date" name="date" type="search" placeholder="Search.." onkeyup="myFunction()" aria-label="Search" style="width: 400px;">
@@ -71,7 +44,7 @@ return new bootstrap.Tooltip(tooltipTriggerEl)
 		</form>
 	</div>
 
-	<div style="display: flex ;align-items: center;justify-content: center;margin-top:25px; margin-left:350px;margin-right:60px ; background-color: white">
+	<div style="background-color: white">
 		<table class="table table-bordered border-primary" id="myTable">
 			<thead>
 				<tr>
@@ -109,11 +82,11 @@ return new bootstrap.Tooltip(tooltipTriggerEl)
 
 
 						<td>
-							<a href="{{ path('app_reservation_show', {'id': reservation.id}) }}">
+							<a href="{{ path('app_res_show', {'id': reservation.id}) }}">
 								<button type="button" class="btn btn-warning" title="Afficher details">
 									<i class="bi bi-eye me-2"></i>Afficher</button>
 							</a>
-							<a href="{{ path('app_reservation_edit', {'id': reservation.id}) }}">
+							<a href="{{ path('app_res_edit', {'id': reservation.id}) }}">
 								<button type="button" class="btn btn-success" title="Modifier Reservation">
 									<i class="bi bi-pencil me-2"></i>Modifier</button>
 							</a>
@@ -131,6 +104,7 @@ return new bootstrap.Tooltip(tooltipTriggerEl)
 	<main id="main" class="main">
 		{{ knp_pagination_render(reservations) }}
 	</main>
+
 
 	<script>
 		function myFunction() {
@@ -166,5 +140,5 @@ tr[i].style.display = "none";
 }
 	</script>
 
-
+<div>
 {% endblock %}

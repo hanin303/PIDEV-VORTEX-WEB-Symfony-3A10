@@ -2,33 +2,29 @@
 
 namespace App\Controller;
 
-
+use Doctrine\ORM\EntityManagerInterface;
+use App\Form\ReservationType2;
 use App\Entity\MoyenTransport;
 use App\Repository\MoyenTransportRepository;
 use App\Form\MoyenTransportRatingType;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
-
+use Knp\Component\Pager\PaginatorInterface;
 use App\Repository\TicketRepository;
 use App\Entity\Reservation;
 use App\Form\ReservationType;
 use App\Repository\ReservationRepository;
 use Symfony\Component\HttpFoundation\Request;
-
+use App\Entity\Ticket;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\StationRepository;
 use App\Form\StationType;
 use App\Entity\Station;
-
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Doctrine\Persistence\ManagerRegistry;
-
-
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-
-
 use App\Entity\Trajet;
 use App\Form\TrajetType;
 use App\Repository\TrajetRepository;
@@ -99,6 +95,7 @@ class HomeController extends AbstractController
             //$reservation->setHeureArrive($form->get('heure_arrive')->getData());
             $entityManager = $this->getDoctrine()->getManager();
             $reservation->setStatus("En attente");
+            $reservation->setIdClient($user);
             $entityManager->persist($reservation);
             $entityManager->flush();
             // Send email notification
@@ -110,7 +107,7 @@ class HomeController extends AbstractController
             $mailer->send($email);*/
             //$user = $this->getDoctrine()->getRepository(User::class)->find(1);
             $email = (new TemplatedEmail())
-                ->from(Address::create('Swift Transit <SwiftTransitPlatform@hotmail.com>'))
+                ->from(Address::create('Swift Transit <SwiftTransitWebSite@hotmail.com>'))
                 ->to($user->getEmail())
                 ->subject('Reservation Information')
                 ->text('Sending emails is fun again!')
@@ -127,7 +124,7 @@ class HomeController extends AbstractController
             $mailer->send($email);
 
             $this->addFlash('success', 'reservation ajouter avec succès!');
-            //return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_res_index', [], Response::HTTP_SEE_OTHER);
         }
         return $this->renderForm('reservation/reserver.html.twig', [
             'reservation' => $reservation,
@@ -135,7 +132,101 @@ class HomeController extends AbstractController
         ]);
     }
 
+    #[Route('/mesreservations', name: 'app_res_index', methods: ['GET'])]
+    public function show(Request $request, PaginatorInterface $paginator, ReservationRepository $reservationRepository,AuthenticationUtils $authenticationUtils,UserRepository $userRepository): Response
+    {
+        $user= new User();
    
+        $lastUsername=$authenticationUtils->getLastUsername();
+        $user=$userRepository->findOneBy(['username'=>$lastUsername]);
+        $userId=$user->getId();
+        //$userId = $_SESSION[$user->getId()];
+        $entityManager = $this->getDoctrine()->getManager();
+        $repository = $entityManager->getRepository(Reservation::class);
+        $query = $repository->createQueryBuilder('r')
+            ->leftJoin('r.id_client', 'u')
+            ->addSelect('u')
+            ->where('u.id = :userId')
+            ->setParameter('userId', $userId)
+            ->orderBy('r.id', 'DESC');
+        //$reservations = $reservationRepository->orderByDate();
+       // $reservations = $reservationRepository->orderByDateAndTime();
+        $pagination = $paginator->paginate(
+            //$reservations, /* query NOT result */
+            //$request->query->getInt('page', 1), /*page number*/
+            //5 /*limit per page*/
+            $query,
+        $request->query->getInt('page', 1), 
+        3
+        );
+        return $this->render('reservation/index2.html.twig', [
+            'reservations' =>  $pagination
+        ]);
+    }
+
+    #[Route('/reservation1/{id}', name: 'app_res_show', methods: ['GET'])]
+    public function showdetailreservation(Reservation $reservation): Response
+    {
+        return $this->render('reservation/show2.html.twig', [
+            'reservation' => $reservation,
+        ]);
+    }
+
+    #[Route('editreservation/{id}/edit', name: 'app_res_edit', methods: ['GET', 'POST'])]
+    public function editreservation(Request $request, Reservation $reservation, EntityManagerInterface $entityManager,AuthenticationUtils $authenticationUtils,UserRepository $userRepository): Response
+    {
+        $form2 = $this->createForm(ReservationType2::class, $reservation);
+        $form2->handleRequest($request);
+
+        $user=new User();
+        if ($form2->isSubmitted() && $form2->isValid()) {
+            //$reservationRepository->save($reservation, true);
+            $lastUsername=$authenticationUtils->getLastUsername();
+            $user=$userRepository->findOneBy(['username'=>$lastUsername]);
+            $reservation->setIdClient($user);
+            $entityManager->flush();
+            $this->addFlash('success', 'reservation modifier avec succès!');
+            return $this->redirectToRoute('app_res_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->renderForm('reservation/edit2.html.twig', [
+            'reservation' => $reservation,
+            'form' => $form2,
+        ]);
+    }
+
+    #[Route('remove/{id}', name: 'app_res_delete', methods: ['POST'])]
+    public function deleteres(Request $request, Reservation $reservation, ReservationRepository $reservationRepository): Response
+    {
+        if ($this->isCsrfTokenValid('delete' . $reservation->getId(), $request->request->get('_token'))) {
+            $reservationRepository->remove($reservation, true);
+        }
+
+        $this->addFlash('success', 'reservation supprimer avec succès!');
+        return $this->redirectToRoute('app_res_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/mestickets', name: 'app_tick_index', methods: ['GET'])]
+    public function showtickets(Request $request, PaginatorInterface $paginator, TicketRepository $ticketRepository): Response
+    {
+        $tickets = $paginator->paginate(
+            $ticketRepository->findAll(),
+            $request->query->getInt('page', 1),
+            2
+        );
+        return $this->render('ticket/index2.html.twig', [
+            'tickets' => $tickets,
+        ]);
+    }
+
+    #[Route('/showTickets/{id}', name: 'app_tick_show', methods: ['GET'])]
+    public function showticket(Ticket $ticket): Response
+    {
+        return $this->render('ticket/show2.html.twig', [
+            'ticket' => $ticket,
+        ]);
+    }
+
     #[Route('/tarifs', name: 'tarif_ticket')]
     public function showListTickets(TicketRepository $ticketRepository): Response
     {
