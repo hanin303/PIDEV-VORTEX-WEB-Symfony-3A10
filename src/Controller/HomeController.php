@@ -107,7 +107,7 @@ class HomeController extends AbstractController
             $mailer->send($email);*/
             //$user = $this->getDoctrine()->getRepository(User::class)->find(1);
             $email = (new TemplatedEmail())
-                ->from(Address::create('Swift Transit <SwiftTransitWebSite@hotmail.com>'))
+                ->from(Address::create('Swift Transit <swiftTransitWebPlat@hotmail.com>'))
                 ->to($user->getEmail())
                 ->subject('Reservation Information')
                 ->text('Sending emails is fun again!')
@@ -175,11 +175,11 @@ class HomeController extends AbstractController
     #[Route('editreservation/{id}/edit', name: 'app_res_edit', methods: ['GET', 'POST'])]
     public function editreservation(Request $request, Reservation $reservation, EntityManagerInterface $entityManager,AuthenticationUtils $authenticationUtils,UserRepository $userRepository): Response
     {
-        $form2 = $this->createForm(ReservationType2::class, $reservation);
-        $form2->handleRequest($request);
+        $form = $this->createForm(ReservationType2::class, $reservation);
+        $form->handleRequest($request);
 
         $user=new User();
-        if ($form2->isSubmitted() && $form2->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             //$reservationRepository->save($reservation, true);
             $lastUsername=$authenticationUtils->getLastUsername();
             $user=$userRepository->findOneBy(['username'=>$lastUsername]);
@@ -191,7 +191,7 @@ class HomeController extends AbstractController
 
         return $this->renderForm('reservation/edit2.html.twig', [
             'reservation' => $reservation,
-            'form' => $form2,
+            'form' => $form,
         ]);
     }
 
