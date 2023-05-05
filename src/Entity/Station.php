@@ -15,10 +15,10 @@ use App\Entity\Commune;
 class Station
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    #[Groups("starion")]
-    private ?int $id = null;
+#[ORM\GeneratedValue]
+#[ORM\Column(type: 'integer')]
+private ?int $id = null;
+
 
     #[ORM\Column(length: 20, nullable: true)]
     #[Groups("starion")]
@@ -56,10 +56,8 @@ class Station
 
         return $this;
     }
-
-    /**
-     * @return Collection<int, MoyenTransport>
-     */
+/*
+    
     public function getIdMoy(): Collection
     {
         return $this->id_moy;
@@ -85,8 +83,8 @@ class Station
         }
 
         return $this;
-    }
-
+    } 
+*/
     public function getCommune(): ?Commune
     {
         return $this->commune;
