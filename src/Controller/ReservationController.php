@@ -23,6 +23,7 @@ use Dompdf\Dompdf;
 use Dompdf\Options;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 #[Route('/reservation')]
 class ReservationController extends AbstractController
@@ -42,13 +43,27 @@ class ReservationController extends AbstractController
         ]);
     }
 
-    /*#[Route('/', name: 'app_reservation_index', methods: ['GET'])]
-    public function index(ReservationRepository $reservationRepository): Response
+    #[Route('/getAllReservation', name: 'app_reservation_index_json', methods: ['GET'])]
+    public function AllReservationJson(ReservationRepository $reservationRepository,NormalizerInterface $Normalizer): Response
     {
-        return $this->render('reservation/index.html.twig', [
-            'reservations' => $reservationRepository->findAll(),
-        ]);
-    }*/
+        $reservations = $reservationRepository->findAll();
+        $data=[];
+        foreach ($reservations as $reservartion) {
+        $data[] = [
+       'id' => $reservartion->getId(),
+       'date_reservation' => $reservartion->getDateReservation(),
+       'heure_depart' => $reservartion->getHeureDepart(),
+       'heure_arrive' => $reservartion->getHeureArrive(),
+       'status' => $reservartion->getStatus(),
+       'type_ticket' => $reservartion->getTypeTicket(),
+       'id_client' => $reservartion->getIdClient()->getNom() . ' ' . $reservartion->getIdClient()->getPrenom(),
+       'id_moy' => $reservartion->getIdMoy()->getTypeVehicule(),
+       'id_it' => $reservartion->getIdIt()->getPtsDepart(). ' ' . $reservartion->getIdIt()->getPtsArrive(),
+        ];
+        }
+        return $this->json($data);
+       
+    }
 
     #[Route('/new', name: 'app_reservation_new', methods: ['GET', 'POST'])]
     public function new(Request $request, ReservationRepository $reservationRepository, MailerInterface $mailer,AuthenticationUtils $authenticationUtils,UserRepository $userRepository): Response
