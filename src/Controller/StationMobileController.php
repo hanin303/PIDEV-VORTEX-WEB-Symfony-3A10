@@ -54,7 +54,7 @@ return new JsonResponse($formatted);
 
 
     }
-
+//dddddddddddddd
      #[Route('/deleteMobile', name: 'app_mobile_delete', methods: ['GET','DELETE'])]
     public function deleteMobile(Request $request)
     {
