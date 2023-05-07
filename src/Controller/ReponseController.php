@@ -8,13 +8,18 @@ use App\Form\ReponseType;
 use App\Entity\Reclamation;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mailer\Mailer;
+use App\Repository\ReponseRepository;
 use Symfony\Component\Mailer\Transport;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 
@@ -251,6 +256,7 @@ public function delete($id) {
       ]);
   }
 
+///////////////////////////////////////////////////////////////mobile////////////////////////////////////////
 
 
 }

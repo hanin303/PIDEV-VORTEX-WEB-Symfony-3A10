@@ -7,16 +7,21 @@ use Dompdf\Options;
 use App\Entity\User;
 use App\Entity\Reclamation;
 use App\Form\ReclamationType;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\ReclamationRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Notifier\NotifierInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use App\Repository\UserRepository;
 
 
 
@@ -24,7 +29,7 @@ class ReclamationController extends AbstractController
 {
 
     private $entityManager;
-    
+
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
@@ -39,7 +44,7 @@ class ReclamationController extends AbstractController
     //     $query = $repository->createQueryBuilder('c')
     //         ->orderBy('c.id_reclamation', 'DESC');
 
-        
+
     //     // $data = $this->getDoctrine()->getRepository(Reclamation::class)->findAll();
     //     // return $this->render('reclamation/index.html.twig', [
     //     //     'list' => $data  
@@ -54,7 +59,7 @@ class ReclamationController extends AbstractController
     //     ]);
     // }
 
-   /* #[Route('/reclamations', name: 'app_reclamation')]
+    /* #[Route('/reclamations', name: 'app_reclamation')]
 public function index(Request $request, PaginatorInterface $paginator): Response
 {
     $entityManager = $this->getDoctrine()->getManager();
@@ -80,15 +85,15 @@ public function index(Request $request, PaginatorInterface $paginator): Response
         'availableItemsPerPage' => $availableItemsPerPage,
     ]);
 }*/
-#[Route('/reclamations', name: 'app_reclamation')]
-public function index(Request $request, PaginatorInterface $paginator,AuthenticationUtils $authenticationUtils,UserRepository $userRepository): Response
-{
-    $user= new User();
-   
-        $error=$authenticationUtils->getLastAuthenticationError();
-        $lastUsername=$authenticationUtils->getLastUsername();
-        $user=$userRepository->findOneBy(['username'=>$lastUsername]);
-        $userId=$user->getId();
+    #[Route('/reclamations', name: 'app_reclamation')]
+    public function index(Request $request, PaginatorInterface $paginator, AuthenticationUtils $authenticationUtils, UserRepository $userRepository): Response
+    {
+        $user = new User();
+
+        $error = $authenticationUtils->getLastAuthenticationError();
+        $lastUsername = $authenticationUtils->getLastUsername();
+        $user = $userRepository->findOneBy(['username' => $lastUsername]);
+        $userId = $user->getId();
         //$userId = $_SESSION[$user->getId()];
         $entityManager = $this->getDoctrine()->getManager();
         $repository = $entityManager->getRepository(Reclamation::class);
@@ -98,41 +103,42 @@ public function index(Request $request, PaginatorInterface $paginator,Authentica
             ->where('u.id = :userId')
             ->setParameter('userId', $userId)
             ->orderBy('c.id_reclamation', 'DESC');
-           
-   
-    $itemsPerPage = $request->query->getInt('itemsPerPage', 5);
-
-    $data = $paginator->paginate( 
-        $query,
-        $request->query->getInt('page', 1), 
-        $itemsPerPage
-    );
-
-    // Create an array of available items per page options
-    $availableItemsPerPage = [5, 10, 25, 50, 100];
-
-    return $this->render('reclamation/index.html.twig', [
-        'list' => $data,
-        'itemsPerPage' => $itemsPerPage,
-        'availableItemsPerPage' => $availableItemsPerPage,
-    ]);
-}
 
 
-    
+        $itemsPerPage = $request->query->getInt('itemsPerPage', 5);
+
+        $data = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1),
+            $itemsPerPage
+        );
+
+        // Create an array of available items per page options
+        $availableItemsPerPage = [5, 10, 25, 50, 100];
+
+        return $this->render('reclamation/index.html.twig', [
+            'list' => $data,
+            'itemsPerPage' => $itemsPerPage,
+            'availableItemsPerPage' => $availableItemsPerPage,
+        ]);
+    }
+
+
+
 
     #[Route('/reclamation/add', name: 'add_reclamation')]
-    public function addreclamation(ManagerRegistry $doctrine,Request $req, NotifierInterface $notifier,UserRepository $userRepository,AuthenticationUtils $authenticationUtils): Response {
+    public function addreclamation(ManagerRegistry $doctrine, Request $req, NotifierInterface $notifier, UserRepository $userRepository, AuthenticationUtils $authenticationUtils): Response
+    {
 
-        $badWords = ['merde','fuck','shit','con','connart','putain','pute','chier','bitch','bèullshit','bollocks','damn','putin'];
-      
+        $badWords = ['merde', 'fuck', 'shit', 'con', 'connart', 'putain', 'pute', 'chier', 'bitch', 'bèullshit', 'bollocks', 'damn', 'putin'];
+
         $em = $doctrine->getManager();
         $reclamation = new Reclamation();
-        $form = $this->createForm(ReclamationType::class,$reclamation);
+        $form = $this->createForm(ReclamationType::class, $reclamation);
         // cree une nouvelle formulaire pour recuperer les recs
         $form->handleRequest($req);
         $user = new User();
-        
+
 
         if ($form->isSubmitted() && $form->isValid()) {
             $text = $reclamation->getMessage_Rec();
@@ -142,16 +148,16 @@ public function index(Request $request, PaginatorInterface $paginator,Authentica
                     return $this->redirectToRoute('add_reclamation');
                 }
             }
-           
-        $lastUsername = $authenticationUtils->getLastUsername();
-        $user= $userRepository->findOneBy(['username'=>$lastUsername]);
-       // $id=1;
-        //$utilisateur = $this->entityManager->getRepository(User::class)->find($id);
-        $reclamation->setIdUser($user);
-        $this->entityManager->persist($reclamation);
-        // affecter le user au rec
-        $this->entityManager->flush();
-        // mise a jour
+
+            $lastUsername = $authenticationUtils->getLastUsername();
+            $user = $userRepository->findOneBy(['username' => $lastUsername]);
+            // $id=1;
+            //$utilisateur = $this->entityManager->getRepository(User::class)->find($id);
+            $reclamation->setIdUser($user);
+            $this->entityManager->persist($reclamation);
+            // affecter le user au rec
+            $this->entityManager->flush();
+            // mise a jour
 
             $em->persist($reclamation);
             // affecter la reclamation kemla lel base
@@ -160,69 +166,70 @@ public function index(Request $request, PaginatorInterface $paginator,Authentica
             return $this->redirectToRoute('app_reclamation');
         }
 
-        return $this->renderForm('reclamation/ajouterreclamation.html.twig',['form'=>$form]);
-
-}
-
-   
+        return $this->renderForm('reclamation/ajouterreclamation.html.twig', ['form' => $form]);
+    }
 
 
-#[Route('/reclamation/update/{id}', name: 'update_reclamation')]
-    public function update(Request $req, $id) {
-      
-      $reclamation = $this->getDoctrine()->getRepository(Reclamation::class)->find($id); 
-      $form = $this->createForm(ReclamationType::class,$reclamation);
-      $form->handleRequest($req);
-    if($form->isSubmitted() && $form->isValid()) {
-       
-    $id=1;
-    $utilisateur = $this->entityManager->getRepository(User::class)->find($id);
-    $reclamation->setIdUser($utilisateur);
-    $this->entityManager->persist($reclamation);
-    $this->entityManager->flush();
 
-    ////////////////////////////////////////////////////
+
+    #[Route('/reclamation/update/{id}', name: 'update_reclamation')]
+    public function update(Request $req, $id)
+    {
+
+        $reclamation = $this->getDoctrine()->getRepository(Reclamation::class)->find($id);
+        $form = $this->createForm(ReclamationType::class, $reclamation);
+        $form->handleRequest($req);
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $id = 1;
+            $utilisateur = $this->entityManager->getRepository(User::class)->find($id);
+            $reclamation->setIdUser($utilisateur);
+            $this->entityManager->persist($reclamation);
+            $this->entityManager->flush();
+
+            ////////////////////////////////////////////////////
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($reclamation);
+            $em->flush();
+
+
+
+            return $this->redirectToRoute('app_reclamation');
+        }
+
+        return $this->renderForm('reclamation/modifierreclamation.html.twig', [
+            'form' => $form
+        ]);
+    }
+
+
+
+    #[Route('/reclamation/delete/{id}', name: 'delete_reclamation')]
+    public function delete($id)
+    {
+
+
+
+        $data = $this->getDoctrine()->getRepository(Reclamation::class)->find($id);
 
         $em = $this->getDoctrine()->getManager();
-        $em->persist($reclamation);
+        $em->remove($data);
         $em->flush();
 
 
-       
+
+
         return $this->redirectToRoute('app_reclamation');
     }
 
-    return $this->renderForm('reclamation/modifierreclamation.html.twig',[
-        'form'=>$form]);
-
-}
-
-
-
-#[Route('/reclamation/delete/{id}', name: 'delete_reclamation')]
-public function delete($id) {
- 
- 
-   
-    $data = $this->getDoctrine()->getRepository(Reclamation::class)->find($id); 
-
-      $em = $this->getDoctrine()->getManager();
-      $em->remove($data);
-      $em->flush();
-
-
-     
-
-      return $this->redirectToRoute('app_reclamation');
-  }
 
 
 
 
-
-  #[Route('/reclamation/pdf/{id}', name: 'app_pdfr')]
+    #[Route('/reclamation/pdf/{id}', name: 'app_pdfr')]
     public function pdf($id): Response
-    {  
+    {
         // Configure Dompdf according to your needs
         $pdfOptions = new Options();
         $pdfOptions->set('isRemoteEnabled', true);
@@ -260,5 +267,12 @@ public function delete($id) {
 
         return $response;
     }
+
+
+
+
+
+    //////////////////////////////////////////////////////////////Mobile//////////////////////////////////
+
 
 }
