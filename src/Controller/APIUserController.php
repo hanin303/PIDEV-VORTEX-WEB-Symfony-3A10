@@ -11,6 +11,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 #[Route('/api', name: 'apiUser')]
 class APIUserController extends AbstractController
@@ -27,12 +30,16 @@ class APIUserController extends AbstractController
     #[Route('/showAll', name: 'api_get_all', methods: ['GET','POST'])]
     public function showAll(UserRepository $userRepository): JsonResponse
    {
+       $encoders = [ new JsonEncoder()];
+       $normalizers = [new ObjectNormalizer()];
+
+       $serializer = new Serializer($normalizers, $encoders);
       $users = $userRepository->findAll();
       $serializedUsers = [];
       foreach ($users as $user) {
        $serializedUsers[] = $user->serializer();
       }
-     return $this->json(['users' => $serializedUsers]);
+     return $this->json($serializedUsers);
     }
 
     #[Route('/edit', name: 'api_edit', methods: ['GET','POST'])]
