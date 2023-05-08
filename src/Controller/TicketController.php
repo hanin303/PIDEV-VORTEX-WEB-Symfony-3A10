@@ -26,13 +26,7 @@ use Knp\Component\Pager\PaginatorInterface;
 #[Route('/ticket')]
 class TicketController extends AbstractController
 {
-    /*#[Route('/', name: 'app_ticket_index', methods: ['GET'])]
-    public function index(TicketRepository $ticketRepository): Response
-    {
-        return $this->render('ticket/index.html.twig', [
-            'tickets' => $ticketRepository->findAll(),
-        ]);
-    }*/
+    
     #[Route('/', name: 'app_ticket_index', methods: ['GET'])]
     public function index(Request $request, PaginatorInterface $paginator, TicketRepository $ticketRepository): Response
     {
@@ -44,6 +38,27 @@ class TicketController extends AbstractController
         return $this->render('ticket/index.html.twig', [
             'tickets' => $tickets,
         ]);
+    }
+
+
+    #[Route('/getAllTickets', name: 'app_ticket_index_json', methods: ['GET'])]
+    public function AllTicketsJson(Request $request, TicketRepository $ticketRepository): Response
+    {
+
+        $tickets = $ticketRepository->findAll();
+        $data=[];
+        foreach ($tickets as $ticket) {
+        $data[] = [
+       'id' => $ticket->getId(),
+       'nom_ticket' => $ticket->getNomTicket(),
+       'prix' => $ticket->getPrix(),
+       'status' => $ticket->getStatus(),   
+       //'id_reservation' => $ticket->getIdReservation()->getDateReservation(),
+
+        ];
+        }
+        return $this->json($data);
+
     }
 
     #[Route('/ticket/{id}/payment', name: 'payement')]
@@ -184,6 +199,29 @@ class TicketController extends AbstractController
         ]);
     }
 
+//methode ajout ticket with json
+#[Route('/addTicketJSON', name: 'addTicketJSON', methods: ['GET', 'POST'])]
+public function addTicketJSON(Request $request, NormalizerInterface $normalizer )
+
+{
+   $em = $this->getDoctrine()->getManager();
+   $ticket = new Ticket();
+   $ticket->setNomTicket($request->get('nom_ticket'));
+   $ticket->setPrix($request->get('prix'));
+   $ticket->setStatus($request->get('status'));
+   //$id_reservation = $request->query->get('id_reservation');
+   //$reservation = $em->getRepository(Reservation::class)->find($id_reservation);
+   //$ticket->setIdReservation($reservation);
+   $em->persist($ticket);
+   $em->flush();
+
+   $jsonContent= $normalizer->normalize($ticket, 'json',['groups'=>"tickets"]);
+   return new Response("Ticket added succussfully" . json_encode($jsonContent));
+}
+
+
+
+
     #[Route('/{id}', name: 'app_ticket_show', methods: ['GET'])]
     public function show(Ticket $ticket): Response
     {
@@ -210,6 +248,28 @@ class TicketController extends AbstractController
         ]);
     }
 
+
+    //methode modif ticket with json
+//#[Route('/updateTicketJSON/{id}', name: 'updateTicketJSON', methods: ['GET', 'POST'])]
+#[Route('/updateTicketJSON/{id}', name: 'updateTicketJSON', methods: ['GET', 'POST', 'PUT'])]
+public function updateTicketJSON(Request $request, $id ,NormalizerInterface $normalizer )
+
+{
+   $em = $this->getDoctrine()->getManager();
+   $ticket = $em->getRepository(Ticket::class)->find($id);
+   $ticket->setNomTicket($request->get('nom_ticket'));
+   $ticket->setPrix($request->get('prix'));
+   $ticket->setStatus($request->get('status'));
+   //$id_reservation = $request->query->get('id_reservation');
+   //$reservation = $em->getRepository(Reservation::class)->find($id_reservation);
+   //$ticket->setIdReservation($reservation);
+
+   $em->flush();
+
+   $jsonContent= $normalizer->normalize($ticket, 'json',['groups'=>"tickets"]);
+   return new Response("Ticket updated successfully" . json_encode($jsonContent));
+}
+
     #[Route('/{id}', name: 'app_ticket_delete', methods: ['POST'])]
     public function delete(Request $request, Ticket $ticket, TicketRepository $ticketRepository): Response
     {
@@ -221,20 +281,19 @@ class TicketController extends AbstractController
     }
 
 
+//method delete with json 
+#[Route('/deleteTicketJSON/{id}', name: 'deleteTicketJSON')]
+public function deleteTicketJSON($id,Request $request,NormalizerInterface $Normalizer)
+{
+    $em = $this->getDoctrine()->getManager();
+    $Ticket = $em->getRepository(Ticket::class)->find($id);
+    $em->remove($Ticket);
+    $em->flush();
+    $jsonContent= $Normalizer->normalize($Ticket, 'json',['groups'=>"tickets"]);
+        return new Response("Ticket Deleted successfully".json_encode($jsonContent));
+    } 
 
 
 
-    /* #[Route('/cart', name: 'app_cart_show')]
-    public function getTicketCount(): int
-    {
-        $entityManager = $this->getDoctrine()->getManager();
-        $ticketRepository = $entityManager->getRepository(Ticket::class);
-    
-        $ticketCount = $ticketRepository->createQueryBuilder('t')
-            ->select('COUNT(t.id)')
-            ->getQuery()
-            ->getSingleScalarResult();
-    
-        return $ticketCount;
-    }*/
+
 }

@@ -8,6 +8,9 @@ use App\Entity\Iteneraire;
 use App\Entity\Ticket;
 use App\Entity\MoyenTransport;
 use App\Form\ReservationType;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 use App\Repository\ReservationRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -97,7 +100,7 @@ class ReservationController extends AbstractController
             //$user = $this->getDoctrine()->getRepository(User::class)->find(1);
             $email = (new TemplatedEmail())
 
-                ->from(Address::create('Swift Transit <swiftTransitWebPlat@hotmail.com>'))
+                ->from(Address::create('Swift Transit <swifttransit2025@hotmail.com>'))
                 ->to($user->getEmail())
                 ->subject('Reservation Information')
                 ->text('Sending emails is fun again!')
@@ -123,12 +126,60 @@ class ReservationController extends AbstractController
         ]);
     }
 
+ //methode ajout reservation with json
+ #[Route('/addReservationJSON/new', name: 'addReservationJSON', methods: ['GET', 'POST'])]
+ public function addReservationJSON(Request $request, NormalizerInterface $normalizer )
+
+ {
+    $em = $this->getDoctrine()->getManager();
+    $reservation = new Reservation();    
+    $date_reservation = new \DateTimeImmutable($request->get('date_reservation'));
+    $reservation->setDateReservation($date_reservation);
+   
+    $heure_depart = new \DateTimeImmutable ($request->get('heure_depart'));
+    $reservation->setHeureDepart($heure_depart);
+
+    $heure_arrive = new \DateTimeImmutable($request->get('heure_depart'));
+    $reservation->setHeureArrive($heure_arrive);
+
+    $reservation->setTypeTicket($request->get('type_ticket'));
+    $reservation->setStatus($request->get('status'));
+
+    $id_client = $request->get('id_client');
+    $user = $em->getRepository(User::class)->find($id_client);
+    $reservation->setIdClient($user);
+
+    $id_it = $request->get('id_it');
+    $iteneraire = $em->getRepository(Iteneraire::class)->find($id_it);
+    $reservation->setIdIt($iteneraire);
+
+    $id_moy = $request->get('id_moy');
+    $moyentransport = $em->getRepository(MoyenTransport::class)->find($id_moy);
+    $reservation->setIdMoy($moyentransport);
+
+    $em->persist($reservation);
+    $em->flush();
+
+    $jsonContent= $normalizer->normalize($reservation, 'json',['groups'=>"reservations"]);
+    return new Response("Reservation added succussfully" . json_encode($jsonContent));
+ }
+
+
     #[Route('/{id}', name: 'app_reservation_show', methods: ['GET'])]
     public function show(Reservation $reservation): Response
     {
         return $this->render('reservation/show.html.twig', [
             'reservation' => $reservation,
         ]);
+    }
+
+   //methode show reservation par id json
+    #[Route('/show/{id}', name: 'app_mobile_show', methods: ['GET'])]
+    public function ReservationId($id,NormalizerInterface $normalizer,ReservationRepository $reservationRepository): Response
+    {
+        $reservation = $reservationRepository->find($id);
+        $reservationNormalises= $normalizer->normalize($reservation, 'json',['groups'=>"reservations"]);
+        return new Response(json_encode($reservationNormalises));    
     }
 
     #[Route('/{id}/edit', name: 'app_reservation_edit', methods: ['GET', 'POST'])]
@@ -150,6 +201,45 @@ class ReservationController extends AbstractController
         ]);
     }
 
+ //methode modif reservation with json
+ #[Route('/updateReservationJSON/{id}', name: 'updateReservationJSON', methods: ['GET', 'POST'])]
+ public function updateReservationJSON(Request $request, $id ,NormalizerInterface $normalizer )
+
+ {
+    $em = $this->getDoctrine()->getManager();
+    $reservation = $em->getRepository(Reservation::class)->find($id);
+
+   $date_reservation = new \DateTimeImmutable($request->get('date_reservation'));
+    $reservation->setDateReservation($date_reservation);
+   
+    $heure_depart = new \DateTimeImmutable ($request->get('heure_depart'));
+    $reservation->setHeureDepart($heure_depart);
+
+    $heure_arrive = new \DateTimeImmutable($request->get('heure_depart'));
+    $reservation->setHeureArrive($heure_arrive);
+
+    $reservation->setTypeTicket($request->get('type_ticket'));
+    $reservation->setStatus($request->get('status'));
+
+    $id_client = $request->get('id_client');
+    $user = $em->getRepository(User::class)->find($id_client);
+    $reservation->setIdClient($user);
+
+    $id_it = $request->get('id_it');
+    $iteneraire = $em->getRepository(Iteneraire::class)->find($id_it);
+    $reservation->setIdIt($iteneraire);
+
+    $id_moy = $request->get('id_moy');
+    $moyentransport = $em->getRepository(MoyenTransport::class)->find($id_moy);
+    $reservation->setIdMoy($moyentransport);
+
+    $em->flush();
+
+    $jsonContent= $normalizer->normalize($reservation, 'json',['groups'=>"reservations"]);
+    return new Response("Reservation updated successfully" . json_encode($jsonContent));
+ }
+
+
     #[Route('/{id}', name: 'app_reservation_delete', methods: ['POST'])]
     public function delete(Request $request, Reservation $reservation, ReservationRepository $reservationRepository): Response
     {
@@ -163,6 +253,17 @@ class ReservationController extends AbstractController
         return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
     }
 
+//method delete with json 
+#[Route('/deleteReservationJSON/{id}', name: 'deleteReservationJSON')]
+public function deleteReservationJSON($id,Request $request,NormalizerInterface $Normalizer)
+{
+    $em = $this->getDoctrine()->getManager();
+    $Reservation = $em->getRepository(Reservation::class)->find($id);
+        $em->remove($Reservation);
+        $em->flush();
+        $jsonContent= $Normalizer->normalize($Reservation, 'json',['groups'=>"reservations"]);
+        return new Response("Reservation Deleted successfully".json_encode($jsonContent));
+    } 
 
     //PDF Function
     #[Route('/pdf', name: 'ticket_pdf')]

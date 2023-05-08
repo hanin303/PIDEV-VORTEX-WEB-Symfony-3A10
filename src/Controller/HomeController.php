@@ -107,7 +107,7 @@ class HomeController extends AbstractController
             $mailer->send($email);*/
             //$user = $this->getDoctrine()->getRepository(User::class)->find(1);
             $email = (new TemplatedEmail())
-                ->from(Address::create('Swift Transit <swiftTransitWebPlat@hotmail.com>'))
+                ->from(Address::create('Swift Transit <swifttransit2025@hotmail.com>'))
                 ->to($user->getEmail())
                 ->subject('Reservation Information')
                 ->text('Sending emails is fun again!')
