@@ -19,6 +19,9 @@ use Twilio\Rest\Client;
 use Dompdf\Options;
 use Joli\JoliNotif\Notification;
 use Joli\JoliNotif\NotifierFactory;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Serializer\SerializerInterface;
+
 
 
 
@@ -194,92 +197,6 @@ $notifier->send($notification);
 
 
 
-    // #[Route('/pdf', name: 'pdf_route', methods :["GET"])]
-    // public function generatePdf(MoyenTransportRepository $moyenTransportRepository)
-    // {
-    //     // Configure Dompdf according to your needs
-    //     $pdfOptions = new Options();
-    //     $pdfOptions->set('defaultFont', 'Arial');
-
-    //     // Instantiate Dompdf with our options
-    //     $dompdf = new Dompdf($pdfOptions);
-    //     // Retrieve the HTML generated in our twig file
-    //     $html = $this->renderView('moyen_transport/pdf.html.twig', [
-    //         'moyen_transports' =>$moyenTransportRepository->findAll(),
-    //     ]);
-
-    //     // Load HTML to Dompdf
-    //     $dompdf->loadHtml($html);
-    //     // (Optional) Setup the paper size and orientation 'portrait' or 'portrait'
-    //     $dompdf->setPaper('A4', 'portrait');
-
-    //     // Render the HTML as PDF
-    //     $dompdf->render();
-    //     // Output the generated PDF to Browser (inline view)
-    //     $dompdf->stream("liste.pdf", [
-    //         "moyen_transports" => true
-    //     ]);
-    // }
-
-    // #[Route('/{id}/pdf', name: 'pdf_route')]
-    // public function generatePdf(Request $request, Environment $twig, Pdf $snappyPdf)
-    // {
-    //     // Récupération des données à afficher dans le PDF
-    //     $data = array(
-    //         // ...
-    //     );
-    
-    //     // Génération du contenu du PDF en utilisant le fichier Twig "pdf.html.twig"
-    //     $html = $twig->render('moyen_transport/pdf.html.twig', array('data' => $data));
-    
-    //     // Génération du PDF à partir du contenu HTML avec SnappyPdf
-    //     $pdf = $snappyPdf->createHtml($html);
-    
-    //     // Envoi de la réponse HTTP avec le PDF en tant que contenu
-    //     return new Response(
-    //         $pdf,
-    //         200,
-    //         array(
-    //             'Content-Type' => 'application/pdf',
-    //             'Content-Disposition' => 'attachment; filename="document.pdf"'
-    //         )
-    //     );
-    // }
-    
-
-    // #[Route('/pdf', name: 'pdf_route', methods: ['GET'])]
-    // public function PDF_Reserver(MoyenTransportRepository $moyenTransportRepository)
-    // {
-    //     // Configure Dompdf according to your needs
-    //     $pdfOptions = new Options();
-    //     $pdfOptions->set('defaultFont', 'Arial');
-
-    //     // Instantiate Dompdf with our options
-    //     $dompdf = new Dompdf($pdfOptions);
-    //     // Retrieve the HTML generated in our twig file
-    //     $html = $this->renderView('moyen_transport/pdf.html.twig', [
-    //         'moyen_transports' => $moyenTransportRepository->findAll(),
-    //     ]);
-
-    //     // Load HTML to Dompdf
-    //     $dompdf->loadHtml($html);
-    //     // (Optional) Setup the paper size and orientation 'portrait' or 'portrait'
-    //     $dompdf->setPaper('A4', 'portrait');
-
-    //     // Render the HTML as PDF
-    //     $dompdf->render();
-    //     // Output the generated PDF to Browser (inline view)
-    //     $dompdf->stream("liste_moyen_transport.pdf", [
-    //         "moyen_transports" => true
-    //     ]);
-    // }
-
-
-
-
-
-
-
     
     #[Route('/moys', name: 'app_moys')]
     public function listMoys(Request $request,MoyenTransportRepository $repository,PaginatorInterface $paginator): Response
@@ -343,30 +260,38 @@ public function searchMarque(Request $request, MoyenTransportRepository $reposit
         return new JsonResponse($result);
     }
 
+//JSON time
+#[Route("/moyen/AllMoys", name: "list")]
 
-/* #[Route('/star/{id}', name: 'star')]
-public function yourAction(HttpFoundationRequest $request,$id,ManagerRegistry $doctrine)
+public function getMoys(MoyenTransportRepository $repo, SerializerInterface $serializer)
 {
-    if ($request->isXmlHttpRequest()) {
-        // handle the AJAX request
-        $data = $request->getContent(); // retrieve the data sent by the client-side JavaScript code
-        $repository = $doctrine->getRepository(MoyenTransport::class);
-        $moys = $repository->find($id);
-        if($moys->getNote()==0)
-            $moys->setNote(5);
-        else
-            $moys->setNote(($moys->getNote()+$data[6])/2);//modifier la note du produit
-        $em=$doctrine->getManager();
-        $em->persist($moys);
+    $moys = $repo->findAll();
+    $json = $serializer->serialize($moys, 'json', ['groups' => "moys"]);
+    return new Response($json);
+}
+
+
+#[Route("/moyen/addMoyJSON/new", name: "addMoyJSON")]
+    public function addMoyJSON(Request $req,NormalizerInterface $Normalizer)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+        $moys = new MoyenTransport();
+        $moys->setMatricule($req->get('matricule'));
+        $moys->setNum($req->get('num'));
+        $moys->setCapacite($req->get('capacite'));
+        $moys->setTypeVehicule($req->get('type_vehicule'));
+        $moys->setMarque($req->get('marque'));
+        $moys->setEtat($req->get('etat'));
+        $moys->setIdLigne($req->get('id_ligne_id'));
+        $moys->setStation($req->get('station_id'));
+        $em->persist($evenement);
         $em->flush();
-        $moy = $repository->find($id);
-        $test=$moy->getNote();
-        $response = new Response();//nouvelle instance du response pour la renvoyer a la fonction ajax
-        $response->setContent(json_encode($test));//encoder les donnes sous forme JSON et les attribuer a la variable response
-        $response->headers->set('Content-Type', 'application/json');
-        return $response;//envoie du response
-    } 
-} */
+
+        $jsonContent = $Normalizer->normalize($evenement, 'json', ['groups' => 'moys']);
+        return new Response(json_encode($jsonContent));
+    }
+
 
 
 }
