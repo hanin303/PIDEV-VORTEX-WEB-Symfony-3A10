@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\TicketRepository;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TicketRepository::class)]
@@ -12,16 +13,19 @@ class Ticket
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups("tickets")]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "prix is required")]
     #[Assert\Regex(pattern: '/^\d+(\.\d{1,2})?$/', message: 'Invalid price format.')]
     #[Assert\Positive(message: 'Price must be a positive number.')]
+    #[Groups("tickets")]
     private ?string $prix = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "status is required")]
+    #[Groups("tickets")]
     private ?string $status = null;
 
     #[ORM\OneToOne(inversedBy: 'id_ticket', cascade: ['persist', 'remove'])]
@@ -38,6 +42,7 @@ class Ticket
         type: 'string',
         message: 'description doit être une chaine de caractére.',
     )]
+    #[Groups("tickets")]
     private ?string $nom_ticket = null;
 
     public function getId(): ?int
