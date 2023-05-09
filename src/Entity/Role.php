@@ -72,4 +72,10 @@ class Role
 
         return $this;
     }
+    public function serializer(): array
+    {
+        $role=['id' => $this->getId(),
+            'nom'=>$this->getNom()];
+        return $role;
+    }
 }
