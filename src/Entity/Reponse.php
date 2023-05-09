@@ -2,11 +2,12 @@
 
 namespace App\Entity;
 
+use ORM\Table;
+use App\Entity\Reclamation;
+use App\Entity\Utilisateur;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ReponseRepository;
-use App\Entity\Utilisateur;
-use App\Entity\Reclamation;
-use ORM\Table;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 
 
@@ -19,11 +20,13 @@ class Reponse
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups("Reponse")]
     private ?int $id_reponse = null;
     
   
 
     #[ORM\Column(length: 250)]
+    #[Groups("Reponse")]
     private ?string $text_rep = null;
 
 
@@ -77,11 +80,5 @@ class Reponse
 
         return $this;
     }
-
-
-    
-
-    
-
 
      }

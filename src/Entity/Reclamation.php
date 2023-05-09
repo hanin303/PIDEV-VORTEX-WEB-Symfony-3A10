@@ -3,12 +3,13 @@
 namespace App\Entity;
 
 
+use ORM\Table;
+use App\Entity\Reponse;
+use App\Entity\Utilisateur;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ReclamationRepository;
-use App\Entity\Utilisateur;
-use App\Entity\Reponse;
-use ORM\Table;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ReclamationRepository::class)]
 
@@ -21,21 +22,26 @@ class Reclamation
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups("Reclamation")]
     private ?int $id_reclamation = null;
 
 
 
     #[ORM\Column(length: 250)]
+    #[Groups("Reclamation")]
     private ?string $message_rec = null;
 
 
     #[ORM\Column(length: 250)]
+    #[Groups("Reclamation")]
     private ?string $objet = null;
 
     #[ORM\Column(length: 250)]
+    #[Groups("Reclamation")]
     private ?string $statut = null;
 
     #[ORM\Column(type: "date")]
+    #[Groups("Reclamation")]
     private ?\DateTimeInterface $date_rec = null;
 
 

@@ -8,13 +8,18 @@ use App\Form\ReponseType;
 use App\Entity\Reclamation;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mailer\Mailer;
+use App\Repository\ReponseRepository;
 use Symfony\Component\Mailer\Transport;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 
@@ -251,6 +256,94 @@ public function delete($id) {
       ]);
   }
 
+  /////////////////mobile////////////////////
+  
+#[Route('/displayreponse', name: 'displayreponse')]
+public function displayreclamation(ReponseRepository $repo, NormalizerInterface $normalizer)
+{
+    $reponses = $repo->findAll();
+    
+    $reponseNormalized = [];
+    
+    foreach ($reponses as $reponse) {
+        $reclamationId = $reponse->getReclamation()->getIdReclamation();
+        $reponseNormalized[] = [
+            'id_reponse' => $reponse->getIdReponse(),
+            'text_rep' => $reponse->getTextRep(),
+            'id_reclamation' => $reclamationId
+        ];
+    }
+    
+    return new JsonResponse($reponseNormalized);
+} 
 
+    
+
+
+#[Route('/addreponse', name: 'addreponse')]
+public function new(ManagerRegistry $doctrine, Request $request)
+{
+
+$entityManager = $doctrine->getManagerForClass(Reponse::class);
+
+
+$reponse = new Reponse();
+
+
+$reponse->setText_Rep($request->get('text_rep'));
+$id = intval($request->get('id_reclamation'));
+
+
+$recla = $this->getDoctrine()->getRepository(Reclamation::class)->find($id);
+$reponse->setReclamation($recla);
+
+$entityManager->persist($reponse);
+$entityManager->flush();
+
+
+$serializer = new Serializer([new ObjectNormalizer()]);
+$formatted = $serializer->normalize($reponse);
+return new JsonResponse($formatted);
+
+}
+   
+
+#[Route('/reponsedelete/{id}', name: 'delete_reponse_Mobile')]
+public function deleteliv(ManagerRegistry $doctrine, $id): Response
+{
+$entityManager = $doctrine->getManagerForClass(Reponse::class);
+$rep = $entityManager->getRepository(Reponse::class)->find($id);
+
+if ($rep != null) {
+    $entityManager->remove($rep);
+    $entityManager->flush();
+    $serializer = new Serializer([new ObjectNormalizer()]);
+    $formatted = $serializer->normalize("rep deleted succefully");
+    return new JsonResponse($formatted);
+}
+return new JsonResponse("rep not found");
+}
+
+
+
+
+#[Route('/reponsemodify/{id}', name: 'update_reponse_mobile')]
+public function modify(ManagerRegistry $doctrine, Request $request, $id)
+{
+$entityManager = $doctrine->getManagerForClass(Reponse::class);
+
+
+
+$reponse = $entityManager->getRepository(Reponse::class)->find($id);
+$reponse->setText_Rep($request->get('text_rep'));
+
+$entityManager->persist($reponse);
+$entityManager->flush();
+
+
+$serializer = new Serializer([new ObjectNormalizer()]);
+$formatted = $serializer->normalize($request);
+return new JsonResponse($formatted);
+}
 
 }
