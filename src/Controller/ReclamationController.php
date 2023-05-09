@@ -7,7 +7,10 @@ use Dompdf\Options;
 use App\Entity\User;
 use App\Entity\Reclamation;
 use App\Form\ReclamationType;
+use Symfony\Component\Mime\Email;
 use App\Repository\UserRepository;
+use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mailer\Transport;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\ReclamationRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -21,6 +24,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 
@@ -368,15 +372,93 @@ public function delete($id) {
         $reclamation->setMessageRec($request->get('message_rec'));
         $reclamation->setObjet($request->get('objet'));
         $reclamation->setStatut($request->get('statut'));
-        $dateString = "1999-08-12";
+        //$dateString = "1999-08-12";
+        //$date = \DateTime::createFromFormat('Y-m-d', $dateString);
+        //$reclamation->setDate_Rec($date);
+        $dateString = $request->get('date_rec');
         $date = \DateTime::createFromFormat('Y-m-d', $dateString);
         $reclamation->setDate_Rec($date);
       
-
+         
 
         
         $entityManager->persist($reclamation);
         $entityManager->flush();
+        //////////////////mailinig///////////////////////
+        //$reclamation = $this->entityManager->getRepository(Reclamation::class)->find($id);
+            //$reclamation->setReclamation($reclamation);
+            //$this->entityManager->persist($reponse);
+            //$this->entityManager->flush();
+
+            /////////////////////////////////////////////////////////////////
+
+            //$em->persist($reponse);
+            //$em->flush();
+
+            $user = $reclamation->getIdUser();
+            $prenom = $user->getPrenom();
+            $nom = $user->getNom();
+            $textrec = $reclamation->getMessage_Rec();
+            //$textrep = $reponse->getTextRep();
+            $emailc = $user->getEmail();
+
+
+
+            /////////////////////////////////////////////////////////////////////////
+
+             // Create a Transport object
+        $transport = Transport::fromDsn('smtp://wassim.hassayoune@esprit.tn:hromnijnmbvxtlnq@smtp.gmail.com:465');
+
+        // Create a Mailer object
+        $mailer = new Mailer($transport);
+
+        // Create an Email object
+        $email = (new Email());
+
+        // Set the "From address"
+        $email->from('wassim.hassayoune@esprit.tn');
+
+        // Set the "To address"
+        $email->to(
+            $emailc
+        );
+
+
+
+        // Set a "subject"
+        $email->subject('Réclamation Traitée !');
+
+        // Set the plain-text "Body"
+        $email->text('Test Recu Mail.');
+
+        // Set HTML "Body"
+        $email->html('
+        <div style="border:2px solid green; padding:20px; font-family: Arial, sans-serif;">
+        <img src="http://localhost/PIDEV-VORTEX-WEB-Symfony-3A10/public/Back/img/swift.png" alt="My Image" class="logo">
+          <h1 style="color:#006600; margin-top:0;">Bonjour ' . $nom . ' ' . $prenom . '</h1>  
+          <p style="font-size:18px;">Site swifttransit vous remercie pour votre Réclamation.</p>
+          <p style="font-size:18px;">Votre Réclamation ' . $textrec . ' a ete bien recu  </p>
+          <div class="d-flex justify-content-center">
+          <span class="bi bi-truck" style="font-size: 4rem;"></span>
+        </div>
+        
+          <p style="font-size:18px;">Pour plus d\'informations, n\'hésitez pas à nous contacter.</p>
+          <a href="#" style="display:inline-block; margin-top:20px; padding:10px 20px; background-color:#006600; color:#fff; text-decoration:none; border-radius:5px;">Nous contacter</a>
+        </div>
+      ');
+
+
+
+        // Sending email with status
+        try {
+            // Send email
+            $mailer->send($email);
+        } catch (TransportExceptionInterface $e) {
+        }
+
+
+
+        ///////////////////////mailing///////////////
 
        
        // $serializer = new Serializer([new ObjectNormalizer()]);
@@ -423,7 +505,8 @@ public function delete($id) {
         $reclamation->setMessageRec($request->get('message_rec'));
         $reclamation->setObjet($request->get('objet'));
         $reclamation->setStatut($request->get('statut'));
-        $dateString = "1999-08-12";
+        //$request->get('date_rec');
+        $dateString = $request->get('date_rec');
         $date = \DateTime::createFromFormat('Y-m-d', $dateString);
         $reclamation->setDate_Rec($date);
         
