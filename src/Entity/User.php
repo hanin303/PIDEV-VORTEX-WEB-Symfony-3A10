@@ -15,9 +15,7 @@ use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UnqueEntity;
 use Symfony\Component\Validator\Constraints\UniqueEntity;
-
-
-
+use Symfony\Config\TwigExtra\StringConfig;
 
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -318,7 +316,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             'image'=>$this->getImage(),
             'CIN'=>$this->getCIN(),
             'id_role' => $this->getIdRole()->getId(),
-            'id_state' =>$this->getIdState()->getId()];
+            'id_state' =>$this->getIdState()->getId(),
+            'password' => $this->getPassword(),
+            'id_role'=> $this->id_role->getId()];
         return $user;
     }
 }

@@ -18,7 +18,8 @@ class Mailer
     public function sendEmail(string $receiver, string $code)
     {
         $email = (new Email())
-        ->from(Address::create('Swift Transit <swifttransit2025@hotmail.com>'))
+        ->from(Address::create('Swift Transit <swiftTransit23@hotmail.com>'))
+
         ->to($receiver)
         ->subject('Récupération de mot de passe')
         ->text('Votre code de récupération de mot de passe est :' .$code);
