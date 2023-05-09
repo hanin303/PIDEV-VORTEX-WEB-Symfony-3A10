@@ -7,12 +7,21 @@ use App\Form\LigneType;
 use App\Entity\MoyenTransport;
 use App\Repository\LigneRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Knp\Component\Pager\PaginatorInterface;
 use Joli\JoliNotif\Notification;
 use Joli\JoliNotif\NotifierFactory;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Doctrine\Persistence\ManagerRegistry;
+
+
 
 #[Route('/ligne')]
 class LigneController extends AbstractController
@@ -99,4 +108,66 @@ class LigneController extends AbstractController
 
         return $this->redirectToRoute('app_ligne_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    //JSON time
+#[Route("/ligne/AllLignes", name: "AllLignes")]
+public function getLignes(LigneRepository $repo, SerializerInterface $serializer)
+{
+    $ligne = $repo->findAll();
+    $json = $serializer->serialize($ligne, 'json', ['groups' => "ligne"]);
+    return new Response($json);
 }
+
+
+#[Route("/ligne/addLigneJSON/new", name: "addLigneJSON")]
+    public function addMoyJSON(Request $req,NormalizerInterface $Normalizer)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+        $ligne = new Ligne();
+        $ligne->setNomLigne($req->get('nom_ligne'));
+        $ligne->setTypeLigne($req->get('type_ligne'));
+        $em->persist($ligne);
+        $em->flush();
+
+        $jsonContent = $Normalizer->normalize($ligne, 'json', ['groups' => 'ligne']);
+        return new Response(json_encode($jsonContent));
+    }
+
+  
+
+        #[Route("/ligne/deleteEventJSON/{id}", name: "deleteEventJSON")]
+        public function deleteStudentJSON(Request $req, $id, NormalizerInterface $Normalizer)
+        {
+    
+            $em = $this->getDoctrine()->getManager();
+            $ligne = $em->getRepository(Ligne::class)->find($id);
+            $em->remove($ligne);
+            $em->flush();
+            $jsonContent = $Normalizer->normalize($ligne, 'json', ['groups' => 'ligne']);
+            return new Response("ligne deleted successfully " . json_encode($jsonContent));
+        }
+
+        #[Route('/ligne/updateEventJSON/{id}', name: "updateEventJSON")]
+        public function updateLigneJSON(Request $req, $id, NormalizerInterface $Normalizer)
+        {
+    
+            $em = $this->getDoctrine()->getManager();
+            $ligne = $em->getRepository(Ligne::class)->find($id);
+            $ligne->setNomLigne($req->get('nom_ligne'));
+            $ligne->setTypeLigne($req->get('type_ligne'));
+            $em->flush();
+    
+            $jsonContent = $Normalizer->normalize($ligne, 'json', ['groups' => 'ligne']);
+            return new Response("Ligne updated successfully " . json_encode($jsonContent));
+        }
+
+       
+    }
+
+
+
+
+
+
+

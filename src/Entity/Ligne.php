@@ -6,6 +6,7 @@ use App\Repository\LigneRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: LigneRepository::class)]
@@ -14,17 +15,23 @@ class Ligne
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups("ligne")]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message:"nom ligne is required")]
+    #[Groups("ligne")]
     private ?string $nom_ligne = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message:"type ligne is required")]
+    #[Groups("ligne")]
+
     private ?string $type_ligne = null;
 
     #[ORM\OneToMany(mappedBy: 'id_ligne', targetEntity: MoyenTransport::class)]
+    #[Groups("ligne")]
+
     private Collection $id_moy;
 
     public function __construct()

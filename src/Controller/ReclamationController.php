@@ -7,16 +7,21 @@ use Dompdf\Options;
 use App\Entity\User;
 use App\Entity\Reclamation;
 use App\Form\ReclamationType;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\ReclamationRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Notifier\NotifierInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use App\Repository\UserRepository;
 
 
 
@@ -263,6 +268,197 @@ public function delete($id) {
         $response->headers->set('Cache-Control', 'max-age=0');
 
         return $response;
+    }
+/////////////////////////////////////mobile//////////////////////////////////
+ // #[Route('/displayreclamation', name: 'displayreclamation')]
+    //         public function displayreclamation(ReclamationRepository $repo, NormalizerInterface $normalizer)
+    //         {
+    //             $reclamations = $repo->findAll();
+    //             $reclamationNormalized = $normalizer->normalize($reclamations, 'json', ['groups' => 'Reclamation']);
+    //             return new JsonResponse($reclamationNormalized);
+    //         }       
+
+
+    //         #[Route('/addreclamationmobile', name: 'addreclamation')]
+    //     public function new(ManagerRegistry $doctrine, Request $request)
+    //     {
+    //         $id=123;
+    //         $entityManager = $doctrine->getManagerForClass(Reclamation::class);
+    //         $user = $this->getDoctrine()->getRepository(Utilisateur::class)->find($id);
+
+    //         $reclamation = new Reclamation();
+
+    //         $reclamation->setIdUser($user);
+    //         $reclamation->setMessageRec($request->get('message_rec'));
+    //         $reclamation->setObjet($request->get('objet'));
+    //         $reclamation->setStatut($request->get('statut'));
+    //         //$reclamation->setDate_Rec($request->get('date_rec'));
+    //         $dateString = $request->get('date_rec');
+    //         $date = \DateTime::createFromFormat('Y-m-d', $dateString);
+    //         $reclamation->setDate_Rec($date);
+    //         $entityManager->persist($reclamation);
+    //         $entityManager->flush();
+
+
+    //         $serializer = new Serializer([new ObjectNormalizer()]);
+    //         $formatted = $serializer->normalize($reclamation);
+    //         return new JsonResponse($formatted);
+
+    //     }
+
+    //     #[Route('/reclamationdelete/{id}', name: 'delete_reclamation_Mobile')]
+    //     public function deleteliv(ManagerRegistry $doctrine, $id): Response
+    //     {
+    //         $entityManager = $doctrine->getManagerForClass(Reclamation::class);
+    //         $reclamation = $entityManager->getRepository(Reclamation::class)->find($id);
+
+    //         if ($reclamation != null) {
+    //             $entityManager->remove($reclamation);
+    //             $entityManager->flush();
+    //             $serializer = new Serializer([new ObjectNormalizer()]);
+    //             $formatted = $serializer->normalize("reclamation deleted succefully");
+    //             return new JsonResponse($formatted);
+    //         }
+    //         return new JsonResponse("Category not found");
+    //     }
+
+
+
+
+    //     #[Route('/reclamationmodify/{id}', name: 'update_reclamation_mobile')]
+    //     public function modify(ManagerRegistry $doctrine, Request $request, $id)
+    //     {
+    //         $entityManager = $doctrine->getManagerForClass(Reclamation::class);
+    //         $reclamation = $entityManager->getRepository(Reclamation::class)->find($id);
+
+
+    //         $reclamation->settextrec($request->get('text_rec'));
+    //         $reclamation->setsujet($request->get('sujet'));
+    //         $entityManager->persist($reclamation);
+    //         $entityManager->flush();
+
+
+    //         $serializer = new Serializer([new ObjectNormalizer()]);
+    //         $formatted = $serializer->normalize($request);
+    //         return new JsonResponse($formatted);
+    //     }
+
+    #[Route('/displayreclamation', name: 'displayreclamation')]
+    public function displayreclamation(ReclamationRepository $repo, NormalizerInterface $normalizer)
+    {
+        $reclamations = $repo->findAll();
+        $reclamationNormalized = $normalizer->normalize($reclamations, 'json', ['groups' => 'Reclamation']);
+        return new JsonResponse($reclamationNormalized);
+    }
+
+
+    #[Route('/addreclamationmobile', name: 'addreclamationmobile')]
+    public function new(ManagerRegistry $doctrine, Request $request)
+    {
+        $id=1;  
+        
+        $user = $this->getDoctrine()->getRepository(User::class)->find($id);
+
+       
+        $entityManager = $doctrine->getManagerForClass(Reclamation::class);
+        $reclamation = new Reclamation();
+
+        //$userr=$user->serializer();
+        $reclamation->setIdUser($user);
+        $reclamation->setMessageRec($request->get('message_rec'));
+        $reclamation->setObjet($request->get('objet'));
+        $reclamation->setStatut($request->get('statut'));
+        $dateString = "1999-08-12";
+        $date = \DateTime::createFromFormat('Y-m-d', $dateString);
+        $reclamation->setDate_Rec($date);
+      
+
+
+        
+        $entityManager->persist($reclamation);
+        $entityManager->flush();
+
+       
+       // $serializer = new Serializer([new ObjectNormalizer()]);
+        //$formatted = $serializer->normalize($reclamation);
+       // return new JsonResponse($formatted);
+       
+        $serializer = new Serializer([new ObjectNormalizer()]);
+        $id= $reclamation->getIdUser()->getId();
+        $formatted=['idUser'=>$id];
+        $formatted = $serializer->normalize($formatted);
+        return new JsonResponse($formatted);
+    }
+
+
+
+    #[Route('/reclamationdelete/{id}', name: 'delete_reclamation_Mobile')]
+    public function deleteliv(ManagerRegistry $doctrine, $id): Response
+    {
+        $entityManager = $doctrine->getManagerForClass(Reclamation::class);
+        $reclamation = $entityManager->getRepository(Reclamation::class)->find($id);
+
+        if ($reclamation != null) {
+            $entityManager->remove($reclamation);
+            $entityManager->flush();
+            $serializer = new Serializer([new ObjectNormalizer()]);
+            $formatted = $serializer->normalize("reclamation deleted succefully");
+            return new JsonResponse($formatted);
+        }
+        return new JsonResponse("Category not found");
+    }
+
+
+
+
+    #[Route('/reclamationmodify/{id}', name: 'update_reclamation_mobile')]
+    public function modify(ManagerRegistry $doctrine, Request $request, $id)
+    {
+        $entityManager = $doctrine->getManagerForClass(Reclamation::class);
+        $reclamation = $entityManager->getRepository(Reclamation::class)->find($id);
+
+
+        //$reclamation->settextrec($request->get('text_rec'));
+        //$reclamation->setsujet($request->get('sujet'));
+        $reclamation->setMessageRec($request->get('message_rec'));
+        $reclamation->setObjet($request->get('objet'));
+        $reclamation->setStatut($request->get('statut'));
+        $dateString = "1999-08-12";
+        $date = \DateTime::createFromFormat('Y-m-d', $dateString);
+        $reclamation->setDate_Rec($date);
+        
+        $entityManager->persist($reclamation);
+        $entityManager->flush();
+
+
+        $serializer = new Serializer([new ObjectNormalizer()]);
+        $formatted = $serializer->normalize($request);
+        return new JsonResponse($formatted);
+    }
+
+
+    #[Route('/reclamationser/{id}', name: 'reclamationser_mobile')]
+    public function getReclamationById($id, ReclamationRepository $reclamationRepository, NormalizerInterface $normalizer): JsonResponse
+    {
+        $reclamation = $reclamationRepository->find($id);
+
+        if (!$reclamation instanceof Reclamation) {
+            return new JsonResponse(['error' => 'Reclamation not found.'], JsonResponse::HTTP_NOT_FOUND);
+        }
+
+        $reclamationNormalized = $normalizer->normalize($reclamation, 'json', ['groups' => 'Reclamation']);
+        return new JsonResponse($reclamationNormalized);
+    }
+
+
+
+    #[Route('/reclamationnonrepondu/{id}', name: 'reclamationser123_mobile')]
+    public function getReclamationsNonReponse($id, ReclamationRepository $reclamationRepository, NormalizerInterface $normalizer): JsonResponse
+    {
+        $reclamation = $reclamationRepository->find($id);
+
+        $reclamationNormalized = $normalizer->normalize($reclamation, 'json', ['groups' => 'Reclamation']);
+        return new JsonResponse($reclamationNormalized);
     }
 
 }
