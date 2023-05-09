@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Role;
 use App\Repository\RoleRepository;
 use App\Repository\UserRepository;
 use App\Repository\UserStateRepository;
@@ -48,6 +49,16 @@ class APIUserController extends AbstractController
       }
      return $this->json($serializedUsers);
     }
+   
+    #[Route('/showR', name: 'api_get_r', methods: ['GET','POST'])]
+    public function showR(RoleRepository $roleRepository,Request $request): JsonResponse
+   {
+    $role=$roleRepository->findOneBy(['id'=> $request->get('id')]);
+    if($role!=null){
+        return $this->json($role->serializer());
+    }
+    return $this->json(['test'=>$request->get('id')]);
+    }
     #[Route('/login', name: 'api_login', methods: ['GET','POST'])]
     public function login(Request $request,UserRepository $userRepository)
     {
@@ -56,6 +67,21 @@ class APIUserController extends AbstractController
         return $this->json($us->serializer()
         );
     }
+    #[Route('/showRole', name: 'api_get_role', methods: ['GET','POST'])]
+    public function showRole(RoleRepository $roleRepository): JsonResponse
+   {
+       $encoders = [ new JsonEncoder()];
+       $normalizers = [new ObjectNormalizer()];
+
+       $serializer = new Serializer($normalizers, $encoders);
+      $roles = $roleRepository->findAll();
+      $serializedRoles = [];
+      foreach ($roles as $role) {
+       $serializedRoles[] = $role->serializer();
+      }
+     return $this->json($serializedRoles);
+    }
+   
     #[Route('/edit', name: 'api_edit', methods: ['GET','POST'])]
     public function edit(Request $request, UserRepository $userRepository)
     {
@@ -130,12 +156,51 @@ class APIUserController extends AbstractController
 
         return $this->json(['response'=> 'success']);
     }
+    #[Route('/addAdmin', name: 'api_add_admin', methods: ['GET','POST'])]
+    public function createAdmin(UserPasswordEncoderInterface $userPasswordEncoder ,Request $request, UserRepository $userRepository,RoleRepository $roleRepository,UserStateRepository $userStateRepository)
+    {
+        $user = new User();
+        if($request->get('nom')!=null){
+            $user->setNom($request->get('nom'));
+        }
+        if($request->get('prenom')!=null){
+            $user->setPrenom($request->get('prenom'));
+        }
+        if($request->get('username')!=null) {
+            $user->setUsername($request->get('username'));
+        }
+        if($request->get('email')!=null) {
+            $user->setEmail($request->get('email'));
+        }
+        if($request->get('num_tel')!=null) {
+            $user->setNumTel((int)$request->get('num_tel'));
+        }
+        if($request->get('cin')!=null) {
+            $user->setCIN((int)$request->get('cin'));
+        }
+        if($request->get('mdp')!=null) {
+            $user->setPassword($userPasswordEncoder->encodePassword(
+                $user,
+                $request->get('mdp'))
+            );
+        }
+        if($request->get('id_role')!=null){
+            $user->setIdRole($roleRepository->findOneBy(['id'=>$request->get('id_role')]));
+        }
+
+        $user->setIdState($userStateRepository->findOneBy(['id'=>2]));
+        //$user->setIdRole($roleRepository->findOneBy(['id'=>4]));
+        $userRepository->save($user,true);
+
+        return $this->json(['response'=> 'success']);
+    }
     #[Route('/email', name: 'api_rest',methods: ["POST"])]
     public function forget(Request $request, UserRepository $userRepository,MailerInterface $mailerInterface)
     {
         $email = $request->get('email');
        // return $this->json($email);
-        $user=$userRepository->findOneBy(['email'=>$email]);
+        $user=$userRepository->findOneBy(
+            ['email'=>$email]);
         if($user!=null){
             $mail= new Mailer($mailerInterface);
             $cd=$this->generateCode();
@@ -156,6 +221,21 @@ class APIUserController extends AbstractController
         }else{
             return false;
         }
+    }
+    #[Route('/change', name: 'api_change')]
+    public function changePassword(RoleRepository $roleRepository, UserRepository $userRepository, Request $request,UserPasswordEncoderInterface $userPasswordEncoder)
+    {
+        $user= $userRepository->findOneBy(['id'=>$request->get('id')]);
+        if($request->get('mdp')!=null) {
+            $user->setPassword($userPasswordEncoder->encodePassword(
+                $user,
+                $request->get('mdp'))
+            );
+        }
+        $userRepository->save($user, true);
+       return $this->json(['response'=> 'success']);
+            
+
     }
 
 }
