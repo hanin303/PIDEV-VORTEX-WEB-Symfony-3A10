@@ -52,7 +52,7 @@ class SecurityController extends AbstractController
                 ]);
     }
     #[Route(path: '/connexion', name: 'security_login')]
-    public function login(MailerInterface $mailerInterface, AuthenticationUtils $authenticationUtils,UserRepository $userRepository): Response
+    public function login(AuthenticationUtils $authenticationUtils,UserRepository $userRepository): Response
     {
         $user= new User();
 

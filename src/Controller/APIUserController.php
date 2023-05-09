@@ -6,14 +6,21 @@ use App\Entity\User;
 use App\Repository\RoleRepository;
 use App\Repository\UserRepository;
 use App\Repository\UserStateRepository;
+use App\services\Mailer;
+use phpDocumentor\Reflection\DocBlock\Tags\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Util\StringUtil;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
+use function PHPUnit\Framework\equalTo;
 
 #[Route('/api', name: 'apiUser')]
 class APIUserController extends AbstractController
@@ -23,7 +30,7 @@ class APIUserController extends AbstractController
     {
        $user=$userRepository->findOneBy(['id'=> $request->get('id')]);
         if($user!=null){
-            return $this->json( ['users' => $user->serializer()]);
+            return $this->json($user->serializer());
         }
         return $this->json(['test'=>$request->get('id')]);
     }
@@ -41,7 +48,14 @@ class APIUserController extends AbstractController
       }
      return $this->json($serializedUsers);
     }
-
+    #[Route('/login', name: 'api_login', methods: ['GET','POST'])]
+    public function login(Request $request,UserRepository $userRepository)
+    {
+        $user = $this->getUser();
+        $us= $userRepository->findOneBy(['username'=>$user->getUsername() ]);
+        return $this->json($us->serializer()
+        );
+    }
     #[Route('/edit', name: 'api_edit', methods: ['GET','POST'])]
     public function edit(Request $request, UserRepository $userRepository)
     {
@@ -115,6 +129,33 @@ class APIUserController extends AbstractController
         $userRepository->save($user,true);
 
         return $this->json(['response'=> 'success']);
+    }
+    #[Route('/email', name: 'api_rest',methods: ["POST"])]
+    public function forget(Request $request, UserRepository $userRepository,MailerInterface $mailerInterface)
+    {
+        $email = $request->get('email');
+       // return $this->json($email);
+        $user=$userRepository->findOneBy(['email'=>$email]);
+        if($user!=null){
+            $mail= new Mailer($mailerInterface);
+            $cd=$this->generateCode();
+            $mail->sendEmail($user->getEmail(),$cd);
+            return $this->json(["code"=> $cd,"id"=>$user->getId()]);
+        }
+        return $this->json(["error"=>"error"]);
+    }
+
+    public function generateCode(){
+        $bytes = random_bytes(6);
+        $code = bin2hex($bytes);
+        return $code;
+    }
+    public function verifyCode(string $user_code,$code){
+        if(strcmp($code,$user_code)==0){
+            return true;
+        }else{
+            return false;
+        }
     }
 
 }
