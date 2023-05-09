@@ -100,7 +100,7 @@ class ReservationController extends AbstractController
             //$user = $this->getDoctrine()->getRepository(User::class)->find(1);
             $email = (new TemplatedEmail())
 
-                ->from(Address::create('Swift Transit <swifttransit2025@hotmail.com>'))
+                ->from(Address::create('Swift Transit <swifttransit2026Platform@hotmail.com>'))
                 ->to($user->getEmail())
                 ->subject('Reservation Information')
                 ->text('Sending emails is fun again!')
@@ -128,7 +128,7 @@ class ReservationController extends AbstractController
 
  //methode ajout reservation with json
  #[Route('/addReservationJSON/new', name: 'addReservationJSON', methods: ['GET', 'POST'])]
- public function addReservationJSON(Request $request, NormalizerInterface $normalizer )
+ public function addReservationJSON(Request $request, NormalizerInterface $normalizer , MailerInterface $mailer)
 
  {
     $em = $this->getDoctrine()->getManager();
@@ -159,6 +159,25 @@ class ReservationController extends AbstractController
 
     $em->persist($reservation);
     $em->flush();
+
+    $email = (new TemplatedEmail())
+
+    ->from(Address::create('Swift Transit <swifttransit2026Platform@hotmail.com>'))
+    ->to('<benjemaahanin@gmail.com>')
+    ->subject('Reservation Information')
+    ->text('Sending emails is fun again!')
+    ->htmlTemplate('mailing/reservation.html.twig')
+    ->context([
+        'reservation' => $reservation,
+        'user' => $user->getPrenom().' '.$user->getNom(),
+        'moyen' => $reservation->getIdMoy()->getTypeVehicule(), // add the moyen attribute
+        'heureDepart' => $reservation->getHeureDepart(), // add the heureDepart attribute
+        'heureArrivee' => $reservation->getHeureArrive(), // add the heureArrivee attribute
+        'typeTicket' => $reservation->getTypeTicket(), // add the status attribute
+        'itineraire' => $reservation->getIdIt()->getPtsDepart() . ' -> ' . $reservation->getIdIt()->getPtsArrive(), // add the itineraire attribute
+    ]);
+   $mailer->send($email);
+
 
     $jsonContent= $normalizer->normalize($reservation, 'json',['groups'=>"reservations"]);
     return new Response("Reservation added succussfully" . json_encode($jsonContent));
@@ -209,7 +228,7 @@ class ReservationController extends AbstractController
     $em = $this->getDoctrine()->getManager();
     $reservation = $em->getRepository(Reservation::class)->find($id);
 
-   $date_reservation = new \DateTimeImmutable($request->get('date_reservation'));
+    $date_reservation = new \DateTimeImmutable($request->get('date_reservation'));
     $reservation->setDateReservation($date_reservation);
    
     $heure_depart = new \DateTimeImmutable ($request->get('heure_depart'));
