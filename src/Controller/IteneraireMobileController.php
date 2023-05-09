@@ -14,6 +14,15 @@ use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
  use Symfony\Component\Serializer\Serializer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\Validator\Constraints\Json;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Serializer\SerializerInterface;
+//IteneraireRepository
+use App\Repository\IteneraireRepository;
+//response
+use Symfony\Component\HttpFoundation\Response;
+
+
+use Doctrine\Persistence\ManagerRegistry;
 
 class IteneraireMobileController extends  AbstractController
 {
@@ -107,16 +116,20 @@ class IteneraireMobileController extends  AbstractController
      /**
       * @Route("/displayitineraire", name="display_itineraire")
       */
-     public function allitAction()
-     {
+      public function getIteneraire(IteneraireRepository $repo, SerializerInterface $serializer)
+      {
+        $itineraire = $repo->findAll();
         
-         $itineraire = $this->getDoctrine()->getManager()->getRepository(Iteneraire::class)->findAll();
-         $serializer = new Serializer([new ObjectNormalizer()]);
-         $formatted = $serializer->normalize($itineraire);
 
-         return new JsonResponse($formatted);
-
-     }
+      
+          //$json = $serializer->serialize($itineraire, 'json', ['groups' => 'itineraires']);
+          $json = $serializer->serialize($itineraire,'json', ['groups' => "it"]);
+          
+          
+          return new Response($json);
+      }
+    
+    
 
 
      /******************Detail Reclamation*****************************************/

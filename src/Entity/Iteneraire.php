@@ -7,32 +7,38 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
-
+use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: IteneraireRepository::class)]
 class Iteneraire
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups("it")]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message:"Point de depart est obligatoire")]
     #[Assert\Length(max:10,maxMessage:"Point de depart ne doit pas depasser 10 characters")]
     #[Assert\Regex(pattern: '/^[a-zA-Z]*$/', message: 'Point de depart ne doit pas contenir des chiffres')]
+    #[Groups("it")]
     private ?string $pts_depart = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message:"Point d'arrive' est obligatoire")]
     #[Assert\Length(max:10,maxMessage:"Point d'arrive' ne doit pas depasser 10 characters")]
     #[Assert\Regex(pattern: '/^[a-zA-Z]*$/', message: 'Point darrive ne doit pas contenir des chiffres')]
+    #[Groups("it")]
     private ?string $pts_arrive = null;
 
     #[ORM\OneToMany(mappedBy: 'id_it', targetEntity: Trajet::class)]
+    
     private Collection $id_trajet;
-
+    
     #[ORM\OneToMany(mappedBy: 'id_it', targetEntity: Reservation::class)]
+    
     private Collection $id_reservation;
+    
 
     public function __construct()
     {
