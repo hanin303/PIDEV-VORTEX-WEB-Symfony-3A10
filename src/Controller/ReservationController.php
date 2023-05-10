@@ -100,7 +100,7 @@ class ReservationController extends AbstractController
             //$user = $this->getDoctrine()->getRepository(User::class)->find(1);
             $email = (new TemplatedEmail())
 
-                ->from(Address::create('Swift Transit <swifttransit2026Platform@hotmail.com>'))
+                ->from(Address::create('Swift Transit <TunisPublicTransport2023@hotmail.com>'))
                 ->to($user->getEmail())
                 ->subject('Reservation Information')
                 ->text('Sending emails is fun again!')
@@ -162,8 +162,8 @@ class ReservationController extends AbstractController
 
     $email = (new TemplatedEmail())
 
-    ->from(Address::create('Swift Transit <swifttransit2026Platform@hotmail.com>'))
-    ->to('<benjemaahanin@gmail.com>')
+    ->from(Address::create('Swift Transit <TunisPublicTransport2023@hotmail.com>'))
+    ->to('<abir.machraoui@gmail.com>')
     ->subject('Reservation Information')
     ->text('Sending emails is fun again!')
     ->htmlTemplate('mailing/reservation.html.twig')
