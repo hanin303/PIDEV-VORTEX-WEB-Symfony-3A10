@@ -20,6 +20,7 @@ use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\Persistence\ManagerRegistry;
+use Twilio\Rest\Client;
 
 
 
@@ -159,6 +160,17 @@ public function getLignes(LigneRepository $repo, SerializerInterface $serializer
             $em->flush();
     
             $jsonContent = $Normalizer->normalize($ligne, 'json', ['groups' => 'ligne']);
+            $sid    = "AC9a3661f4bb1dbf0ec9f8f5e02ff8a5d5";
+            $token  = "3e0b0db115831dea895abd3850fa2d53";
+            $client = new Client($sid,$token);
+     
+             $message = $client->messages
+             ->create("whatsapp:+21628275170", // replace with admin's phone number
+                 [
+                   'from' => 'whatsapp:+14155238886', // replace with your Twilio phone number
+                    'body' => 'New update has been done ' ,
+                 ]
+             );
             return new Response("Ligne updated successfully " . json_encode($jsonContent));
         }
 
