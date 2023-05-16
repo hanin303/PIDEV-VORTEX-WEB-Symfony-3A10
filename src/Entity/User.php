@@ -316,7 +316,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             'image'=>$this->getImage(),
             'CIN'=>$this->getCIN(),
             'id_role' => $this->getIdRole()->getId(),
-            'id_state' =>$this->getIdState()->getId(),
+            // 'id_state' =>$this->getIdState()->getId(),
             'password' => $this->getPassword(),
             'id_role'=> $this->id_role->getId()];
         return $user;

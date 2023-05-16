@@ -43,7 +43,7 @@
                         <td>{{ data.message_rec }}</td>
 						 <td>{{ data.statut }}</td>
                         <td>{{ data.date_rec|date("m/d/Y") }}</td>
-						 <td>{{ data.idUser.prenom }}</td>
+						 {# <td>{{ data.idUser.prenom }}</td> #}
 						 <td><a href="{{ path('add_reponse', {'id': data.id_reclamation}) }}"  class="btn btn-outline-success btn-fw;">
 											Repondre</a></td>
                         <td><span class="badge bg-success">Approved</span></td>

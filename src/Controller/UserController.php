@@ -46,10 +46,11 @@ class UserController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $mdp = $form->get('password')->getData();
-            $user->setPassword( $userPasswordEncoder->encodePassword(
+            /*$user->setPassword( $userPasswordEncoder->encodePassword(
                 $user,
                 $mdp
-            ));
+            ));*/
+            $user->setPassword($mdp);
             /*$file=$form->get('images')->getData();
             if($file){
             $imageFileName = $imageUploader->upload($file);

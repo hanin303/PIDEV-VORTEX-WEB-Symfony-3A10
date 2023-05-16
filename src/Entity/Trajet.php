@@ -32,7 +32,7 @@ class Trajet
     private ?string $pts_arrive = null;
 
     #[ORM\ManyToOne(inversedBy: 'id_trajet')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?Iteneraire $id_it = null;
 
     public function getId(): ?int

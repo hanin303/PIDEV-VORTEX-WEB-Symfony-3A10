@@ -143,14 +143,17 @@ class APIUserController extends AbstractController
         if($request->get('cin')!=null) {
             $user->setCIN((int)$request->get('cin'));
         }
-        if($request->get('mdp')!=null) {
+        /*if($request->get('mdp')!=null) {
             $user->setPassword($userPasswordEncoder->encodePassword(
                 $user,
                 $request->get('mdp'))
             );
+        }*/
+        if($request->get('mdp')!=null) {
+            $user->setPassword($request->get('mdp'));
         }
 
-        $user->setIdState($userStateRepository->findOneBy(['id'=>2]));
+        // $user->setIdState($userStateRepository->findOneBy(['id'=>2]));
         $user->setIdRole($roleRepository->findOneBy(['id'=>4]));
         $userRepository->save($user,true);
 
@@ -178,17 +181,21 @@ class APIUserController extends AbstractController
         if($request->get('cin')!=null) {
             $user->setCIN((int)$request->get('cin'));
         }
-        if($request->get('mdp')!=null) {
+        /*if($request->get('mdp')!=null) {
             $user->setPassword($userPasswordEncoder->encodePassword(
                 $user,
                 $request->get('mdp'))
             );
+        }*/
+        if($request->get('mdp')!=null) {
+            $user->setPassword($request->get('mdp'));
         }
+
         if($request->get('id_role')!=null){
             $user->setIdRole($roleRepository->findOneBy(['id'=>$request->get('id_role')]));
         }
 
-        $user->setIdState($userStateRepository->findOneBy(['id'=>2]));
+        // $user->setIdState($userStateRepository->findOneBy(['id'=>2]));
         //$user->setIdRole($roleRepository->findOneBy(['id'=>4]));
         $userRepository->save($user,true);
 
@@ -226,11 +233,14 @@ class APIUserController extends AbstractController
     public function changePassword(RoleRepository $roleRepository, UserRepository $userRepository, Request $request,UserPasswordEncoderInterface $userPasswordEncoder)
     {
         $user= $userRepository->findOneBy(['id'=>$request->get('id')]);
-        if($request->get('mdp')!=null) {
+        /*if($request->get('mdp')!=null) {
             $user->setPassword($userPasswordEncoder->encodePassword(
                 $user,
                 $request->get('mdp'))
             );
+        }*/
+        if($request->get('mdp')!=null) {
+            $user->setPassword($request->get('mdp'));
         }
         $userRepository->save($user, true);
        return $this->json(['response'=> 'success']);

@@ -30,10 +30,11 @@ class SecurityController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $mdp = $form->get('password')->getData();
-            $user->setPassword( $userPasswordEncoder->encodePassword(
+            /*$user->setPassword( $userPasswordEncoder->encodePassword(
                 $user,
                 $mdp
-            ));
+            ));*/
+            $user->setPassword($mdp);
             $file=$form->get('images')->getData();
             if($file){
             $imageFileName = $imageUploader->upload($file);
@@ -85,7 +86,8 @@ class SecurityController extends AbstractController
         $newPassword = $request->request->get('password');
         if($newPassword!=null){
         $user= $userRepository->findOneBy(['username'=>$lastUsername]);
-        $user->setPassword($userPasswordEncoder->encodePassword($user,$newPassword));
+        //$user->setPassword($userPasswordEncoder->encodePassword($user,$newPassword));
+        $user->setPassword($newPassword);
         $userRepository->save($user, true);
         $this->addFlash('success', 'Votre mot de passe a été modifié avec succès.');
         return $this->redirectToRoute('home');
@@ -100,7 +102,8 @@ class SecurityController extends AbstractController
         $newPassword = $request->request->get('password');
         if($newPassword!=null){
         $user= $userRepository->findOneBy(['username'=>$lastUsername]);
-        $user->setPassword($userPasswordEncoder->encodePassword($user,$newPassword));
+        //$user->setPassword($userPasswordEncoder->encodePassword($user,$newPassword));
+        $user->setPassword($newPassword);
         $userRepository->save($user, true);
         $this->addFlash('success', 'Votre mot de passe a été modifié avec succès.');
         return $this->redirectToRoute('app_user_index');

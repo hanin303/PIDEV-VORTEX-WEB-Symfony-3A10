@@ -71,7 +71,8 @@ class ForgetPasswordController extends AbstractController
         if($newPassword!=null){
         $session = $request->getSession();
         $user=$userRepository->findOneBy(['email'=>$session->get('email')]);
-        $user->setPassword($userPasswordEncoder->encodePassword($user,$newPassword));
+        //$user->setPassword($userPasswordEncoder->encodePassword($user,$newPassword));
+        $user->setPassword($newPassword);
         $userRepository->save($user, true);
         $this->addFlash('success', 'Votre mot de passe a été modifié avec succès.');
         return $this->redirectToRoute('security_login');
