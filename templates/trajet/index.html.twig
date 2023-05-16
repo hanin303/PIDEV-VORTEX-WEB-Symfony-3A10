@@ -35,7 +35,7 @@
                 <td>{{ trajet.tempsParcours }}</td>
                 <td>{{ trajet.ptsDepart }}</td>
                 <td>{{ trajet.ptsArrive }}</td>
-                <td>{{ trajet.idIt.ptsdepart ~ ' => ' ~ trajet.idIt.ptsarrive }}</td>
+                {# <td>{{ trajet.idIt.ptsdepart ~ ' => ' ~ trajet.idIt.ptsarrive }}</td> #}
                 <td>
                     <a class="btn btn-outline-success" href="{{ path('app_trajet_show', {'id': trajet.id}) }}">show</a>
                     <a class="btn btn-outline-info" href="{{ path('app_trajet_edit', {'id': trajet.id}) }}">edit</a>

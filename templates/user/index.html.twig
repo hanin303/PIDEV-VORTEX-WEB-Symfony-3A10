@@ -37,7 +37,7 @@
                           <th scope="col">Carte identité</th>
                           <th scope="col">Image</th>
                           <th scope="col">Role</th>
-                          <th scope="col">Etat</th>
+                          {# <th scope="col">Etat</th> #}
                           <th scope="col">actions</th>
                       </tr>
                     </thead>
@@ -52,7 +52,7 @@
                             <td>{{ user.CIN }}</td>
                             <td>{{ user.image }}</td>
                             <td>{{ user.id_role.nom }}</td>
-                            <td>{{ user.id_state.status }}</td>
+                            {# <td>{{ user.id_state.status }}</td> #}
 
                             <td>
                                 <a class="btn btn-outline-info" href="{{ path('app_user_show', {'id': user.id}) }}">Afficher</a>
